@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="game\Game.h" />
+    <ClInclude Include="game\Game_local.h" />
+    <ClInclude Include="game\Player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game\Game_local.cpp" />
+    <ClCompile Include="game\Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game\Game.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{5af76cac-4a1b-4c59-b1e1-c46a1c63d5c7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
