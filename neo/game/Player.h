@@ -10,8 +10,13 @@ public:
 
 	renderView_t* GetRenderView();
 
+	void Think();
+
 private:
 	renderView_t* renderView;
+
+public:
+	idVec3 orgin;
 };
 
 #endif

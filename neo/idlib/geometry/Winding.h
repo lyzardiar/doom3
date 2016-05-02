@@ -33,6 +33,7 @@ If you have questions concerning this license or the applicable additional terms
 ===============================================================================
 
 	A winding is an arbitrary convex polygon defined by an array of points.
+	由一组定点表示的 任意的多边形
 
 ===============================================================================
 */

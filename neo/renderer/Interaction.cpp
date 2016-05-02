@@ -905,6 +905,9 @@ void idInteraction::CreateInteraction( const idRenderModel *model ) {
 		}
 
 		// if the interaction has shadows and this surface casts a shadow
+		common->Printf("has shaodow = %s, castsShadow = %s \n", HasShadows()?"true":"false", 
+			shader->SurfaceCastsShadow()?"true":"false");
+		
 		if ( HasShadows() && shader->SurfaceCastsShadow() && tri->silEdges != NULL ) {
 
 			// if the light has an optimized shadow volume, don't create shadows for any models that are part of the base areas
@@ -932,6 +935,7 @@ void idInteraction::CreateInteraction( const idRenderModel *model ) {
 	}
 
 	// if none of the surfaces generated anything, don't even bother checking?
+	// 如果没有surfaces生成
 	if ( !interactionGenerated ) {
 		MakeEmpty();
 	}

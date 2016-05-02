@@ -105,6 +105,7 @@ srfTriangles_t *R_PolytopeSurface( int numPlanes, const idPlane *planes, idWindi
 		}
 	}
 
+	// ¼ÆËã°üÎ§ºÐ
 	R_BoundTriSurf( tri );
 
 	return tri;

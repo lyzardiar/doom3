@@ -673,7 +673,6 @@ to handle mirrors,
 ====================
 */
 void idRenderWorldLocal::RenderScene( const renderView_t *renderView ) {
-#ifdef	ID_DEDICATED
 	renderView_t	copy;
 
 	if ( !glConfig.isInitialized ) {
@@ -780,7 +779,6 @@ void idRenderWorldLocal::RenderScene( const renderView_t *renderView ) {
 
 	// prepare for any 2D drawing after this
 	tr.guiModel->Clear();
-#endif
 }
 
 /*

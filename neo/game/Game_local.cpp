@@ -131,9 +131,106 @@ void idGameLocal::SetPersistentPlayerInfo( int clientNum, const idDict &playerIn
 
 }
 
+void ParseSpawnArgsToRenderLight( const idDict *args, renderLight_t *renderLight ) {
+	bool	gotTarget, gotUp, gotRight;
+	const char	*texture;
+	idVec3	color;
+
+	memset( renderLight, 0, sizeof( *renderLight ) );
+
+	if (!args->GetVector("light_origin", "", renderLight->origin)) {
+		args->GetVector( "origin", "", renderLight->origin );
+	}
+
+	gotTarget = args->GetVector( "light_target", "", renderLight->target );
+	gotUp = args->GetVector( "light_up", "", renderLight->up );
+	gotRight = args->GetVector( "light_right", "", renderLight->right );
+	args->GetVector( "light_start", "0 0 0", renderLight->start );
+	if ( !args->GetVector( "light_end", "", renderLight->end ) ) {
+		renderLight->end = renderLight->target;
+	}
+
+	// we should have all of the target/right/up or none of them
+	if ( ( gotTarget || gotUp || gotRight ) != ( gotTarget && gotUp && gotRight ) ) {
+		return;
+	}
+
+	if ( !gotTarget ) {
+		renderLight->pointLight = true;
+
+		// allow an optional relative center of light and shadow offset
+		args->GetVector( "light_center", "0 0 0", renderLight->lightCenter );
+
+		// create a point light
+		if (!args->GetVector( "light_radius", "300 300 300", renderLight->lightRadius ) ) {
+			float radius;
+
+			args->GetFloat( "light", "300", radius );
+			renderLight->lightRadius[0] = renderLight->lightRadius[1] = renderLight->lightRadius[2] = radius;
+		}
+	}
+
+	// get the rotation matrix in either full form, or single angle form
+	idAngles angles;
+	idMat3 mat;
+	if ( !args->GetMatrix( "light_rotation", "1 0 0 0 1 0 0 0 1", mat ) ) {
+		if ( !args->GetMatrix( "rotation", "1 0 0 0 1 0 0 0 1", mat ) ) {
+			args->GetFloat( "angle", "0", angles[ 1 ] );
+			angles[ 0 ] = 0;
+			angles[ 1 ] = idMath::AngleNormalize360( angles[ 1 ] );
+			angles[ 2 ] = 0;
+			mat = angles.ToMat3();
+		}
+	}
+
+	// fix degenerate identity matrices
+	mat[0].FixDegenerateNormal();
+	mat[1].FixDegenerateNormal();
+	mat[2].FixDegenerateNormal();
+
+	renderLight->axis = mat;
+
+	// check for other attributes
+	args->GetVector( "_color", "1 1 1", color );
+	renderLight->shaderParms[ SHADERPARM_RED ]		= color[0];
+	renderLight->shaderParms[ SHADERPARM_GREEN ]	= color[1];
+	renderLight->shaderParms[ SHADERPARM_BLUE ]		= color[2];
+	args->GetFloat( "shaderParm3", "1", renderLight->shaderParms[ SHADERPARM_TIMESCALE ] );
+	if ( !args->GetFloat( "shaderParm4", "0", renderLight->shaderParms[ SHADERPARM_TIMEOFFSET ] ) ) {
+		// offset the start time of the shader to sync it to the game time
+		renderLight->shaderParms[ SHADERPARM_TIMEOFFSET ] = -MS2SEC( gameLocal.time );
+	}
+
+	args->GetFloat( "shaderParm5", "0", renderLight->shaderParms[5] );
+	args->GetFloat( "shaderParm6", "0", renderLight->shaderParms[6] );
+	args->GetFloat( "shaderParm7", "0", renderLight->shaderParms[ SHADERPARM_MODE ] );
+	args->GetBool( "noshadows", "0", renderLight->noShadows );
+	args->GetBool( "nospecular", "0", renderLight->noSpecular );
+	args->GetBool( "parallel", "0", renderLight->parallel );
+
+	args->GetString( "texture", "lights/squarelight1", &texture );
+	// allow this to be NULL
+	renderLight->shader = declManager->FindMaterial( texture, false );
+}
+
 void idGameLocal::InitFromNewMap( const char *mapName, idRenderWorld *renderWorld, bool isServer, bool isClient, int randSeed )
 {
 	gameRenderWorld = renderWorld;
+
+	renderLight_t* renderLight = new renderLight_t;
+	memset(renderLight, 0, sizeof(renderLight_t));
+	renderLight->origin.Set(-128, 192, 128);
+	renderLight->lightRadius.Set(226, 226, 225);
+	renderLight->pointLight = true;
+
+	renderLight->shaderParms[ SHADERPARM_RED ]		= 0.78;
+	renderLight->shaderParms[ SHADERPARM_GREEN ]	= 1;
+	renderLight->shaderParms[ SHADERPARM_BLUE ]		= 1;
+
+	renderLight->shader = declManager->FindMaterial( "lights/squarelight1", false );
+	renderLight->shaderParms[3] = 1;
+
+	gameRenderWorld->AddLightDef(renderLight);
 }
 
 bool idGameLocal::InitFromSaveGame( const char *mapName, idRenderWorld *renderWorld, idFile *saveGameFile )
@@ -166,6 +263,10 @@ gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds )
 	gameReturn_t ret;
 	memset(&ret, 0, sizeof(gameReturn_t));
 
+	usercmd_t cmd = clientCmds[0];
+	player->orgin.x = player->orgin.x + cmd.forwardmove;
+	player->CalculateRenderView();
+
 	gameRenderWorld->SetRenderView(player->GetRenderView());
 	return ret;
 }
@@ -174,9 +275,9 @@ bool idGameLocal::Draw( int clientNum )
 {
 	gameRenderWorld->RenderScene( player->GetRenderView() );
 
-	renderSystem->SetColor4( 1, 1, 1, 1.0 );
+	/*renderSystem->SetColor4( 1, 1, 1, 1.0 );
 	const idMaterial* armorMaterial = declManager->FindMaterial( "armorViewEffect" );
-	renderSystem->DrawStretchPic( 0, 0, 640, 480, 0, 0, 1, 1, armorMaterial );
+	renderSystem->DrawStretchPic( 0, 0, 640, 480, 0, 0, 1, 1, armorMaterial );*/
 
 	return true;
 }

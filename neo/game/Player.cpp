@@ -1,7 +1,7 @@
 #include "../idlib/precompiled.h"
 #include "Player.h"
 
-Player::Player():renderView(NULL)
+Player::Player():renderView(NULL), orgin(90, 64, 64)
 {
 
 }
@@ -28,13 +28,13 @@ void Player::CalculateRenderView( void ) {
 	renderView->height = SCREEN_HEIGHT;
 	renderView->viewID = 0;
 
-	renderView->vieworg = vec3_zero;
+	renderView->vieworg = orgin;
 	renderView->viewaxis = mat3_identity;
 
 	renderView->viewID = 0;
 
-	renderView->fov_x = 4;
-	renderView->fov_y = 3;
+	renderView->fov_x = 90;
+	renderView->fov_y = 74;
 		// field of view
 		//gameLocal.CalcFov( CalcFov( true ), renderView->fov_x, renderView->fov_y );
 
@@ -48,4 +48,8 @@ void Player::CalculateRenderView( void ) {
 renderView_t* Player::GetRenderView()
 {
 	return renderView;
+}
+
+void Player::Think()
+{
 }
