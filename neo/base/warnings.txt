@@ -1,0 +1,38 @@
+------------- Warnings ---------------
+
+during game/mars_city1...
+WARNING: Couldn't load sound 'guisounds.wav' using default
+WARNING: Unknown string id #str_07018
+WARNING: Unknown string id #str_07021
+WARNING: Unknown string id #str_07022
+WARNING: Unknown string id #str_07023
+WARNING: Unknown string id #str_07024
+WARNING: Unknown string id #str_07025
+WARNING: Unknown string id #str_07026
+WARNING: Unknown string id #str_07027
+WARNING: Unknown string id #str_07028
+WARNING: Unknown string id #str_07029
+WARNING: Unknown string id #str_07036
+WARNING: Unknown string id #str_07037
+WARNING: Unknown string id #str_07038
+WARNING: Unknown string id #str_07040
+WARNING: Unknown string id #str_07041
+WARNING: Unknown string id #str_07042
+WARNING: Unknown string id #str_07044
+WARNING: Unknown string id #str_07047
+WARNING: Unknown string id #str_07049
+WARNING: Unknown string id #str_07050
+WARNING: Unknown string id #str_07053
+WARNING: Unknown string id #str_07054
+WARNING: Unknown string id #str_07055
+WARNING: Unknown string id #str_07056
+WARNING: Unknown string id #str_07131
+WARNING: Unknown string id #str_07132
+WARNING: Unknown string id #str_07133
+WARNING: Unknown string id #str_07183
+
+29 warnings.
+
+
+-------------- Errors ---------------
+

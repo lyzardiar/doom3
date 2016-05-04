@@ -131,9 +131,6 @@ public:
 	// store the new set of keys if they are found valid
 	virtual bool	CheckKey( const char *key, bool netConnect, bool offline_valid[ 2 ] ) = 0;
 
-	// verify the current set of keys for validity
-	// strict -> keys in state CDKEY_CHECKING state are not ok
-	virtual bool	CDKeysAreValid( bool strict ) = 0;
 	// wipe the key on file if the network check finds it invalid
 	virtual void	ClearCDKey( bool valid[ 2 ] ) = 0;
 

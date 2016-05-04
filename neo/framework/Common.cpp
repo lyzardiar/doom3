@@ -2799,12 +2799,7 @@ void idCommonLocal::Init( int argc, const char **argv, const char *cmdline ) {
 		// game specific initialization
 		InitGame();
 
-		// don't add startup commands if no CD key is present
-#if ID_ENFORCE_KEY
-		if ( !session->CDKeysAreValid( false ) || !AddStartupCommands() ) {
-#else
 		if ( !AddStartupCommands() ) {
-#endif
 			// if the user didn't give any commands, run default action
 			session->StartMenu( true );
 		}

@@ -50,9 +50,9 @@ idSessionLocal::StartMainMenu
 ==============
 */
 void idSessionLocal::StartMenu( bool playIntro ) {
-	//StartNewGame( "testmaps/test_box" );
+	StartNewGame( "testmaps/test_box" );
 	//StartNewGame( "game/admin" );
-	StartNewGame("game/mars_city1");
+	//StartNewGame("game/mars_city1");
 
 
 	//if ( guiActive == guiMainMenu ) {
@@ -993,18 +993,6 @@ void idSessionLocal::HandleMainMenuCommands( const char *menuCommand ) {
 
 		if ( !idStr::Icmp( cmd, "CheckUpdate2" ) ) {
 			idAsyncNetwork::client.SendVersionCheck( true );
-			continue;
-		}
-
-		if ( !idStr::Icmp( cmd, "checkKeys" ) ) {
-#if ID_ENFORCE_KEY
-			// not a strict check so you silently auth in the background without bugging the user
-			if ( !session->CDKeysAreValid( false ) ) {
-				/*cmdSystem->BufferCommandText( CMD_EXEC_NOW, "promptKey force" );
-				cmdSystem->ExecuteCommandBuffer();*/
-				common->Printf("check key error");
-			}			
-#endif
 			continue;
 		}
 

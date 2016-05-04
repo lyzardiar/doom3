@@ -216,72 +216,6 @@ bool idSessionLocal::MaybeWaitOnCDKey( void ) {
 }
 
 /*
-===================
-Session_PromptKey_f
-===================
-*/
-static void Session_PromptKey_f( const idCmdArgs &args ) {
-	const char	*retkey;
-	bool		valid[ 2 ];
-	static bool recursed = false;
-
-	if ( recursed ) {
-		common->Warning( "promptKey recursed - aborted" );
-		return;
-	}
-	recursed = true;
-
-	do {
-		// in case we're already waiting for an auth to come back to us ( may happen exceptionally )
-		if ( sessLocal.MaybeWaitOnCDKey() ) {
-			if ( sessLocal.CDKeysAreValid( true ) ) {
-				recursed = false;
-				return;
-			}
-		}
-		// the auth server may have replied and set an error message, otherwise use a default
-		const char *prompt_msg = sessLocal.GetAuthMsg();
-		if ( prompt_msg[ 0 ] == '\0' ) {
-			prompt_msg = common->GetLanguageDict()->GetString( "#str_04308" );
-		}
-		retkey = sessLocal.MessageBox( MSG_CDKEY, prompt_msg, common->GetLanguageDict()->GetString( "#str_04305" ), true, NULL, NULL, true );
-		if ( retkey ) {
-			if ( sessLocal.CheckKey( retkey, false, valid ) ) {
-				// if all went right, then we may have sent an auth request to the master ( unless the prompt is used during a net connect )
-				bool canExit = true;
-				if ( sessLocal.MaybeWaitOnCDKey() ) {
-					// wait on auth reply, and got denied, prompt again
-					if ( !sessLocal.CDKeysAreValid( true ) ) {
-						// server says key is invalid - MaybeWaitOnCDKey was interrupted by a CDKeysAuthReply call, which has set the right error message
-						// the invalid keys have also been cleared in the process
-						sessLocal.MessageBox( MSG_OK, sessLocal.GetAuthMsg(), common->GetLanguageDict()->GetString( "#str_04310" ), true, NULL, NULL, true );
-						canExit = false;
-					}
-				}
-				if ( canExit ) {
-					// make sure that's saved on file
-					sessLocal.WriteCDKey();
-					sessLocal.MessageBox( MSG_OK, common->GetLanguageDict()->GetString( "#str_04307" ), common->GetLanguageDict()->GetString( "#str_04305" ), true, NULL, NULL, true );
-					break;
-				}
-			} else {
-				// offline check sees key invalid
-				// build a message about keys being wrong. do not attempt to change the current key state though
-				// ( the keys may be valid, but user would have clicked on the dialog anyway, that kind of thing )
-				idStr msg;
-				idAsyncNetwork::BuildInvalidKeyMsg( msg, valid );
-				sessLocal.MessageBox( MSG_OK, msg, common->GetLanguageDict()->GetString( "#str_04310" ), true, NULL, NULL, true );
-			}
-		} else if ( args.Argc() == 2 && idStr::Icmp( args.Argv(1), "force" ) == 0 ) {
-			// cancelled in force mode
-			cmdSystem->BufferCommandText( CMD_EXEC_APPEND, "quit\n" );
-			cmdSystem->ExecuteCommandBuffer();
-		}
-	} while ( retkey );
-	recursed = false;
-}
-
-/*
 ===============================================================================
 
 SESSION LOCAL
@@ -1111,23 +1045,6 @@ void idSessionLocal::StartNewGame( const char *mapName, bool devmap ) {
 	common->Printf( "Dedicated servers cannot start singleplayer games.\n" );
 	return;
 #else
-#if ID_ENFORCE_KEY
-	// strict check. don't let a game start without a definitive answer
-	if ( !CDKeysAreValid( true ) ) {
-		//bool prompt = true;
-		//if ( MaybeWaitOnCDKey() ) {
-		//	// check again, maybe we just needed more time
-		//	if ( CDKeysAreValid( true ) ) {
-		//		// can continue directly
-		//		prompt = false;
-		//	}
-		//}
-		//if ( prompt ) {
-		//	cmdSystem->BufferCommandText( CMD_EXEC_NOW, "promptKey force" );
-		//	cmdSystem->ExecuteCommandBuffer();
-		//}
-	}
-#endif
 	if ( idAsyncNetwork::server.IsActive() ) {
 		common->Printf("Server running, use si_map / serverMapRestart\n");
 		return;
@@ -2277,7 +2194,7 @@ void idSessionLocal::Draw() {
 		if ( guiLoading ) {
 			guiLoading->Redraw( com_frameTime );
 		}
-		if ( guiActive == guiMsg ) {
+		if ( guiActive != NULL && guiActive == guiMsg ) {
 			guiMsg->Redraw( com_frameTime );
 		} 
 	} else if ( guiTest ) {
@@ -2788,8 +2705,6 @@ void idSessionLocal::Init() {
 
 	cmdSystem->AddCommand( "rescanSI", Session_RescanSI_f, CMD_FL_SYSTEM, "internal - rescan serverinfo cvars and tell game" );
 
-	cmdSystem->AddCommand( "promptKey", Session_PromptKey_f, CMD_FL_SYSTEM, "prompt and sets the CD Key" );
-
 	cmdSystem->AddCommand( "hitch", Session_Hitch_f, CMD_FL_SYSTEM|CMD_FL_CHEAT, "hitches the game" );
 
 	// the same idRenderWorld will be used for all games
@@ -2799,18 +2714,18 @@ void idSessionLocal::Init() {
 
 	// we have a single instance of the main menu
 #ifndef ID_DEMO_BUILD
-	guiMainMenu = uiManager->FindGui( "guis/mainmenu.gui", true, false, true );
+	//guiMainMenu = uiManager->FindGui( "guis/mainmenu.gui", true, false, true );
 #else
 	guiMainMenu = uiManager->FindGui( "guis/demo_mainmenu.gui", true, false, true );
 #endif
-	guiMainMenu_MapList = uiManager->AllocListGUI();
+	/*guiMainMenu_MapList = uiManager->AllocListGUI();
 	guiMainMenu_MapList->Config( guiMainMenu, "mapList" );
 	idAsyncNetwork::client.serverList.GUIConfig( guiMainMenu, "serverList" );
 	guiRestartMenu = uiManager->FindGui( "guis/restart.gui", true, false, true );
 	guiGameOver = uiManager->FindGui( "guis/gameover.gui", true, false, true );
 	guiMsg = uiManager->FindGui( "guis/msg.gui", true, false, true );
 	guiTakeNotes = uiManager->FindGui( "guis/takeNotes.gui", true, false, true );
-	guiIntro = uiManager->FindGui( "guis/intro.gui", true, false, true );
+	guiIntro = uiManager->FindGui( "guis/intro.gui", true, false, true );*/
 
 	whiteMaterial = declManager->FindMaterial( "_white" );
 
@@ -3083,66 +2998,6 @@ bool idSessionLocal::CheckKey( const char *key, bool netConnect, bool offline_va
 	SetCDKeyGuiVars();
 
 	return true;
-}
-
-/*
-===============
-idSessionLocal::CDKeysAreValid
-checking that the key is present and uses only valid characters
-if d3xp is installed, check for a valid xpkey as well
-emit an auth packet to the master if possible and needed
-===============
-*/
-bool idSessionLocal::CDKeysAreValid( bool strict ) {
-	int i;
-	bool emitAuth = false;
-
-	if ( cdkey_state == CDKEY_UNKNOWN ) {
-		if ( strlen( cdkey ) != CDKEY_BUF_LEN - 1 ) {
-			cdkey_state = CDKEY_INVALID;
-		} else {
-			for ( i = 0; i < CDKEY_BUF_LEN-1; i++ ) {
-				if ( !strchr( CDKEY_DIGITS, cdkey[i] ) ) {
-					cdkey_state = CDKEY_INVALID;
-					break;
-				}
-			}
-		}		
-		if ( cdkey_state == CDKEY_UNKNOWN ) {
-			cdkey_state = CDKEY_CHECKING;
-			emitAuth = true;
-		}
-	}
-	if ( xpkey_state == CDKEY_UNKNOWN ) {
-		if ( fileSystem->HasD3XP() ) {
-			if ( strlen( xpkey ) != CDKEY_BUF_LEN -1 ) {
-				xpkey_state = CDKEY_INVALID;
-			} else {
-				for ( i = 0; i < CDKEY_BUF_LEN-1; i++ ) {
-					if ( !strchr( CDKEY_DIGITS, xpkey[i] ) ) {
-						xpkey_state = CDKEY_INVALID;
-					}
-				}
-			}
-			if ( xpkey_state == CDKEY_UNKNOWN ) {
-				xpkey_state = CDKEY_CHECKING;
-				emitAuth = true;
-			}
-		} else {
-			xpkey_state = CDKEY_NA;
-		}
-	}
-	if ( emitAuth ) {
-		EmitGameAuth();
-	}
-	// make sure to keep the mainmenu gui up to date in case we made state changes
-	SetCDKeyGuiVars();
-	return true;
-	if ( strict ) {
-		return cdkey_state == CDKEY_OK && ( xpkey_state == CDKEY_OK || xpkey_state == CDKEY_NA );
-	} else {
-		return ( cdkey_state == CDKEY_OK || cdkey_state == CDKEY_CHECKING ) && ( xpkey_state == CDKEY_OK || xpkey_state == CDKEY_CHECKING || xpkey_state == CDKEY_NA );
-	}
 }
 
 /*

@@ -118,7 +118,6 @@ public:
 	virtual void		WriteCDKey( void );
 	virtual const char *GetCDKey( bool xp );
 	virtual bool		CheckKey( const char *key, bool netConnect, bool offline_valid[ 2 ] );
-	virtual bool		CDKeysAreValid( bool strict );
 	virtual void		ClearCDKey( bool valid[ 2 ] );
 	virtual void		SetCDKeyGuiVars( void );
 	virtual bool		WaitingForGameAuth( void );

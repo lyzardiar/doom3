@@ -58,6 +58,9 @@ static gameExport_t			gameExport;
 idGameLocal					gameLocal;
 idGame *					game = &gameLocal;	// statically pointed at an idGameLocal
 
+
+const static float PlayerSpeed = 0.1;
+
 const char *idGameLocal::sufaceTypeNames[ MAX_SURFACE_TYPES ] = {
 	"none",	"metal", "stone", "flesh", "wood", "cardboard", "liquid", "glass", "plastic",
 	"ricochet", "surftype10", "surftype11", "surftype12", "surftype13", "surftype14", "surftype15"
@@ -264,7 +267,7 @@ gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds )
 	memset(&ret, 0, sizeof(gameReturn_t));
 
 	usercmd_t cmd = clientCmds[0];
-	player->orgin.x = player->orgin.x + cmd.forwardmove;
+	player->orgin.x = player->orgin.x + cmd.forwardmove * PlayerSpeed;
 	player->CalculateRenderView();
 
 	gameRenderWorld->SetRenderView(player->GetRenderView());
