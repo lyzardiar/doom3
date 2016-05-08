@@ -317,6 +317,8 @@ private:
 	idDict _playerInfo;
 	
 	Player* player;
+
+	idMapFile* mapFile;
 	
 };
 

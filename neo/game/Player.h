@@ -7,13 +7,17 @@ public:
 	Player();
 
 	void CalculateRenderView();
-
 	renderView_t* GetRenderView();
 
 	void Think();
+	void SetUserInput(const usercmd_t& usercmd);
 
 private:
-	renderView_t* renderView;
+	renderView_t*	_renderView;
+	usercmd_t		_usercmd;
+
+	idAngles		viewAngles;	
+	idAngles		cmdAngles;		
 
 public:
 	idVec3 orgin;

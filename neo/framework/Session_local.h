@@ -172,6 +172,7 @@ public:
 	static idCVar		com_guid;
 
 	static idCVar		gui_configServerRate;
+	static idCVar		test_map;
 
 	int					timeHitch;
 

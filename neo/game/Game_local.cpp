@@ -59,7 +59,6 @@ idGameLocal					gameLocal;
 idGame *					game = &gameLocal;	// statically pointed at an idGameLocal
 
 
-const static float PlayerSpeed = 0.1;
 
 const char *idGameLocal::sufaceTypeNames[ MAX_SURFACE_TYPES ] = {
 	"none",	"metal", "stone", "flesh", "wood", "cardboard", "liquid", "glass", "plastic",
@@ -216,24 +215,109 @@ void ParseSpawnArgsToRenderLight( const idDict *args, renderLight_t *renderLight
 	renderLight->shader = declManager->FindMaterial( texture, false );
 }
 
+void ParseSpawnArgsToRenderEntity( const idDict *args, renderEntity_t *renderEntity ) {
+	int			i;
+	const char	*temp;
+	idVec3		color;
+	float		angle;
+
+	memset( renderEntity, 0, sizeof( *renderEntity ) );
+
+	temp = args->GetString( "model" );
+
+	if ( temp[0] != '\0' ) {
+		if ( !renderEntity->hModel ) {
+			renderEntity->hModel = renderModelManager->FindModel( temp );
+		}
+	}
+	if ( renderEntity->hModel ) {
+		renderEntity->bounds = renderEntity->hModel->Bounds( renderEntity );
+	} else {
+		renderEntity->bounds.Zero();
+	}
+
+	temp = args->GetString( "skin" );
+	if ( temp[0] != '\0' ) {
+		renderEntity->customSkin = declManager->FindSkin( temp );
+	}
+
+	temp = args->GetString( "shader" );
+	if ( temp[0] != '\0' ) {
+		renderEntity->customShader = declManager->FindMaterial( temp );
+	}
+
+	args->GetVector( "origin", "0 0 0", renderEntity->origin );
+
+	// get the rotation matrix in either full form, or single angle form
+	if ( !args->GetMatrix( "rotation", "1 0 0 0 1 0 0 0 1", renderEntity->axis ) ) {
+		angle = args->GetFloat( "angle" );
+		if ( angle != 0.0f ) {
+			renderEntity->axis = idAngles( 0.0f, angle, 0.0f ).ToMat3();
+		} else {
+			renderEntity->axis.Identity();
+		}
+	}
+
+	renderEntity->referenceSound = NULL;
+
+	// get shader parms
+	args->GetVector( "_color", "1 1 1", color );
+	renderEntity->shaderParms[ SHADERPARM_RED ]		= color[0];
+	renderEntity->shaderParms[ SHADERPARM_GREEN ]	= color[1];
+	renderEntity->shaderParms[ SHADERPARM_BLUE ]	= color[2];
+	renderEntity->shaderParms[ 3 ]					= args->GetFloat( "shaderParm3", "1" );
+	renderEntity->shaderParms[ 4 ]					= args->GetFloat( "shaderParm4", "0" );
+	renderEntity->shaderParms[ 5 ]					= args->GetFloat( "shaderParm5", "0" );
+	renderEntity->shaderParms[ 6 ]					= args->GetFloat( "shaderParm6", "0" );
+	renderEntity->shaderParms[ 7 ]					= args->GetFloat( "shaderParm7", "0" );
+	renderEntity->shaderParms[ 8 ]					= args->GetFloat( "shaderParm8", "0" );
+	renderEntity->shaderParms[ 9 ]					= args->GetFloat( "shaderParm9", "0" );
+	renderEntity->shaderParms[ 10 ]					= args->GetFloat( "shaderParm10", "0" );
+	renderEntity->shaderParms[ 11 ]					= args->GetFloat( "shaderParm11", "0" );
+
+	// check noDynamicInteractions flag
+	renderEntity->noDynamicInteractions = args->GetBool( "noDynamicInteractions" );
+
+	// check noshadows flag
+	renderEntity->noShadow = args->GetBool( "noshadows" );
+
+	// check noselfshadows flag
+	renderEntity->noSelfShadow = args->GetBool( "noselfshadows" );
+}
+
 void idGameLocal::InitFromNewMap( const char *mapName, idRenderWorld *renderWorld, bool isServer, bool isClient, int randSeed )
 {
 	gameRenderWorld = renderWorld;
 
-	renderLight_t* renderLight = new renderLight_t;
-	memset(renderLight, 0, sizeof(renderLight_t));
-	renderLight->origin.Set(-128, 192, 128);
-	renderLight->lightRadius.Set(226, 226, 225);
-	renderLight->pointLight = true;
+	mapFile = new idMapFile;
+	if ( !mapFile->Parse( idStr( mapName ) + ".map" ) ) {
+		delete mapFile;
+		mapFile = NULL;
+	}
 
-	renderLight->shaderParms[ SHADERPARM_RED ]		= 0.78;
-	renderLight->shaderParms[ SHADERPARM_GREEN ]	= 1;
-	renderLight->shaderParms[ SHADERPARM_BLUE ]		= 1;
+	int numEntity = mapFile->GetNumEntities();
+	for (int i=0; i<numEntity; ++i)
+	{
+		idMapEntity* mapEntity = mapFile->GetEntity(i);
+		idDict spawnArgs = mapEntity->epairs;
+		common->Printf("map entity : %s\n", spawnArgs.GetString( "name"));
 
-	renderLight->shader = declManager->FindMaterial( "lights/squarelight1", false );
-	renderLight->shaderParms[3] = 1;
-
-	gameRenderWorld->AddLightDef(renderLight);
+		const char	*classname;
+		spawnArgs.GetString( "classname", NULL, &classname );
+		if ( idStr::Cmp( classname, "light" ) == 0)
+		{
+			renderLight_t* renderLight = new renderLight_t;
+			ParseSpawnArgsToRenderLight(&spawnArgs, renderLight);
+			gameRenderWorld->AddLightDef(renderLight);
+		}
+		else if(idStr::Cmp( classname, "info_player_start" ) == 0)
+		{
+			player->orgin = spawnArgs.GetVector("origin"); 
+			/*	renderEntity_t* renderEntity = new renderEntity_t;
+			ParseSpawnArgsToRenderEntity(&spawnArgs, renderEntity);
+			gameRenderWorld->AddEntityDef(renderEntity);*/
+		}
+	}
 }
 
 bool idGameLocal::InitFromSaveGame( const char *mapName, idRenderWorld *renderWorld, idFile *saveGameFile )
@@ -263,14 +347,15 @@ void idGameLocal::SpawnPlayer( int clientNum )
 
 gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds )
 {
+	gameRenderWorld->DebugClearLines(  1 );
 	gameReturn_t ret;
 	memset(&ret, 0, sizeof(gameReturn_t));
 
-	usercmd_t cmd = clientCmds[0];
-	player->orgin.x = player->orgin.x + cmd.forwardmove * PlayerSpeed;
-	player->CalculateRenderView();
+	player->SetUserInput(clientCmds[0]);
+	player->Think();
 
 	gameRenderWorld->SetRenderView(player->GetRenderView());
+
 	return ret;
 }
 
@@ -278,9 +363,8 @@ bool idGameLocal::Draw( int clientNum )
 {
 	gameRenderWorld->RenderScene( player->GetRenderView() );
 
-	/*renderSystem->SetColor4( 1, 1, 1, 1.0 );
-	const idMaterial* armorMaterial = declManager->FindMaterial( "armorViewEffect" );
-	renderSystem->DrawStretchPic( 0, 0, 640, 480, 0, 0, 1, 1, armorMaterial );*/
+	renderSystem->DrawSmallStringExt( 0, 0, va( "pos %f %f %f", player->orgin.x, player->orgin.y, player->orgin.z),
+		colorWhite, true, declManager->FindMaterial( "textures/bigchars" ) );
 
 	return true;
 }
