@@ -51,40 +51,8 @@ idSessionLocal::StartMainMenu
 */
 void idSessionLocal::StartMenu( bool playIntro ) {
 	StartNewGame(test_map.GetString());
-	//StartNewGame( "testmaps/test_box" );
-	//StartNewGame( "game/admin" );
-	//StartNewGame("game/mars_city1");
-
-
-	//if ( guiActive == guiMainMenu ) {
-	//	return;
-	//}
-
-	//if ( readDemo ) {
-	//	// if we're playing a demo, esc kills it
-	//	UnloadMap();
-	//}
-
-	//// pause the game sound world
-	//if ( sw != NULL && !sw->IsPaused() ) {
-	//	sw->Pause();
-	//}
-
-	//// start playing the menu sounds
-	//soundSystem->SetPlayingSoundWorld( menuSoundWorld );
-
-	//SetGUI( guiMainMenu, NULL );
-	//guiMainMenu->HandleNamedEvent( playIntro ? "playIntro" : "noIntro" );
-
-
-	//if(fileSystem->HasD3XP()) {
-	//	guiMainMenu->SetStateString("game_list", common->GetLanguageDict()->GetString( "#str_07202" ));
-	//} else {
-	//	guiMainMenu->SetStateString("game_list", common->GetLanguageDict()->GetString( "#str_07212" ));
-	//}
 
 	console->Close();
-
 }
 
 /*

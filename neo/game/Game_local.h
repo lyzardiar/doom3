@@ -319,7 +319,9 @@ private:
 	Player* player;
 
 	idMapFile* mapFile;
-	
+
+	qhandle_t _lightHandler;
+	renderLight_t* renderLight;
 };
 
 //============================================================================

@@ -306,9 +306,9 @@ void idGameLocal::InitFromNewMap( const char *mapName, idRenderWorld *renderWorl
 		spawnArgs.GetString( "classname", NULL, &classname );
 		if ( idStr::Cmp( classname, "light" ) == 0)
 		{
-			renderLight_t* renderLight = new renderLight_t;
+			renderLight = new renderLight_t;
 			ParseSpawnArgsToRenderLight(&spawnArgs, renderLight);
-			gameRenderWorld->AddLightDef(renderLight);
+			_lightHandler = gameRenderWorld->AddLightDef(renderLight);
 		}
 		else if(idStr::Cmp( classname, "info_player_start" ) == 0)
 		{
@@ -354,6 +354,9 @@ gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds )
 	player->SetUserInput(clientCmds[0]);
 	player->Think();
 
+	renderLight->origin = player->orgin;
+	gameRenderWorld->UpdateLightDef( _lightHandler, renderLight );
+
 	gameRenderWorld->SetRenderView(player->GetRenderView());
 
 	return ret;
@@ -371,8 +374,7 @@ bool idGameLocal::Draw( int clientNum )
 
 escReply_t idGameLocal::HandleESC( idUserInterface **gui )
 {
-	escReply_t ret;
-	return ret;
+	return ESC_IGNORE;
 }
 
 idUserInterface	* idGameLocal::StartMenu( void )
