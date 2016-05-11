@@ -19,6 +19,9 @@ private:
 	idAngles		viewAngles;	
 	idAngles		cmdAngles;		
 
+	idVec2 speed;
+
+	static idCVar player_speed;
 public:
 	idVec3 orgin;
 };

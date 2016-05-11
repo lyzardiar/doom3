@@ -216,9 +216,10 @@ void RB_PrepareStageTexturing( const shaderStage_t *pStage,  const drawSurf_t *s
 				qglEnable( GL_VERTEX_PROGRAM_ARB );
 			} else {
 				// per-pixel reflection mapping without a normal map
+				// ²»º¬·¨ÏßÌùÍ¼ÖðÏñËØ·´Éä 
 				qglNormalPointer( GL_FLOAT, sizeof( idDrawVert ), ac->normal.ToFloatPtr() );
 				qglEnableClientState( GL_NORMAL_ARRAY );
-
+	
 				qglBindProgramARB( GL_FRAGMENT_PROGRAM_ARB, FPROG_ENVIRONMENT );
 				qglEnable( GL_FRAGMENT_PROGRAM_ARB );
 				qglBindProgramARB( GL_VERTEX_PROGRAM_ARB, VPROG_ENVIRONMENT );

@@ -1,7 +1,7 @@
 #include "../idlib/precompiled.h"
 #include "Player.h"
 
-const static float PlayerSpeed = 0.1f;
+idCVar Player::player_speed( "player_speed", "0.1", CVAR_GAME | CVAR_FLOAT, "player speed" );
 
 Player::Player():_renderView(NULL), orgin(90, 64, 200)
 {
@@ -40,6 +40,11 @@ void Player::CalculateRenderView( void ) {
 
 	_renderView->viewaxis = viewAngles.ToMat3() ;
 
+	idVec3 vec;
+	viewAngles.ToVectors(&vec);
+	speed.Set(vec.x, vec.y);
+	speed.Normalize();
+
 	if ( _renderView->fov_y == 0 ) {
 		common->Error( "renderView->fov_y == 0" );
 	}
@@ -52,9 +57,12 @@ renderView_t* Player::GetRenderView()
 
 void Player::Think()
 {
-	orgin.x += _usercmd.forwardmove * PlayerSpeed;
-	orgin.y -= _usercmd.rightmove * PlayerSpeed; 
-	orgin.z += _usercmd.upmove * PlayerSpeed;
+	speed *= player_speed.GetFloat();
+	orgin.x += _usercmd.forwardmove * speed.x;
+	orgin.y += _usercmd.forwardmove * speed.y;
+
+	orgin.x += _usercmd.rightmove * speed.y;
+	orgin.y += -_usercmd.rightmove * speed.x;
 
 	for (int i = 0; i < 3; i++ ) {
 		cmdAngles[i] = SHORT2ANGLE( _usercmd.angles[i] );

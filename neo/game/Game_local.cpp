@@ -313,9 +313,12 @@ void idGameLocal::InitFromNewMap( const char *mapName, idRenderWorld *renderWorl
 		else if(idStr::Cmp( classname, "info_player_start" ) == 0)
 		{
 			player->orgin = spawnArgs.GetVector("origin"); 
-			/*	renderEntity_t* renderEntity = new renderEntity_t;
+		}
+		else
+		{
+			renderEntity_t* renderEntity = new renderEntity_t;
 			ParseSpawnArgsToRenderEntity(&spawnArgs, renderEntity);
-			gameRenderWorld->AddEntityDef(renderEntity);*/
+			gameRenderWorld->AddEntityDef(renderEntity);
 		}
 	}
 }

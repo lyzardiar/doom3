@@ -66,7 +66,7 @@ RB_ARB2_DrawInteraction
 */
 void	RB_ARB2_DrawInteraction( const drawInteraction_t *din ) {
 	// load all the vertex program parameters
-	qglProgramEnvParameter4fvARB( GL_VERTEX_PROGRAM_ARB, PP_LIGHT_ORIGIN, din->localLightOrigin.ToFloatPtr() );
+
 	qglProgramEnvParameter4fvARB( GL_VERTEX_PROGRAM_ARB, PP_VIEW_ORIGIN, din->localViewOrigin.ToFloatPtr() );
 	qglProgramEnvParameter4fvARB( GL_VERTEX_PROGRAM_ARB, PP_LIGHT_PROJECT_S, din->lightProjection[0].ToFloatPtr() );
 	qglProgramEnvParameter4fvARB( GL_VERTEX_PROGRAM_ARB, PP_LIGHT_PROJECT_T, din->lightProjection[1].ToFloatPtr() );
@@ -287,8 +287,10 @@ void RB_ARB2_DrawInteractions( void ) {
 
 		if ( r_useShadowVertexProgram.GetBool() ) {
 			qglEnable( GL_VERTEX_PROGRAM_ARB );
+			// stencil shadow shader
 			qglBindProgramARB( GL_VERTEX_PROGRAM_ARB, VPROG_STENCIL_SHADOW );
 			RB_StencilShadowPass( vLight->globalShadows );
+			// interaction shader
 			RB_ARB2_CreateDrawInteractions( vLight->localInteractions );
 			qglEnable( GL_VERTEX_PROGRAM_ARB );
 			qglBindProgramARB( GL_VERTEX_PROGRAM_ARB, VPROG_STENCIL_SHADOW );
