@@ -176,8 +176,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalLibraryDirectories>openal\lib;sys\win32\dongle;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>openal\lib;sys\win32\dongle;sys\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;libcmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dedicated Debug with inlines|Win32'">
@@ -237,6 +237,7 @@
     <ClInclude Include="renderer\cg_explicit.h" />
     <ClInclude Include="renderer\Cinematic.h" />
     <ClInclude Include="renderer\glext.h" />
+    <ClInclude Include="renderer\glutils.h" />
     <ClInclude Include="renderer\GuiModel.h" />
     <ClInclude Include="renderer\Image.h" />
     <ClInclude Include="renderer\Interaction.h" />
@@ -349,9 +350,11 @@
     <ClCompile Include="renderer\draw_arb.cpp" />
     <ClCompile Include="renderer\draw_arb2.cpp" />
     <ClCompile Include="renderer\draw_common.cpp" />
+    <ClCompile Include="renderer\draw_glsl.cpp" />
     <ClCompile Include="renderer\draw_nv10.cpp" />
     <ClCompile Include="renderer\draw_nv20.cpp" />
     <ClCompile Include="renderer\draw_r200.cpp" />
+    <ClCompile Include="renderer\glutils.cpp" />
     <ClCompile Include="renderer\GuiModel.cpp" />
     <ClCompile Include="renderer\Image_files.cpp" />
     <ClCompile Include="renderer\Image_init.cpp" />

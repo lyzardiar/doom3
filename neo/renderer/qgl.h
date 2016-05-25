@@ -34,7 +34,8 @@ If you have questions concerning this license or the applicable additional terms
 
 #if defined( _WIN32 )
 
-#include <gl/gl.h>
+#include "gl/glew.h"
+//#include <gl/gl.h>
 
 #elif defined( MACOS_X )
 

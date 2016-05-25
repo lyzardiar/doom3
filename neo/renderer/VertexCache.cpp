@@ -40,6 +40,11 @@ idCVar idVertexCache::r_vertexBufferMegs( "r_vertexBufferMegs", "32", CVAR_INTEG
 
 idVertexCache		vertexCache;
 
+#ifdef qglBindBufferARB
+#undef qglBindBufferARB
+#define qglBindBufferARB glBindBuffer
+#endif
+
 /*
 ==============
 R_ListVertexCache_f

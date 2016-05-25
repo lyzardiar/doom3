@@ -569,12 +569,13 @@ void RB_ShowSilhouette( void ) {
 	RB_RenderDrawSurfListWithFunction( backEnd.viewDef->drawSurfs, backEnd.viewDef->numDrawSurfs, 
 		RB_T_RenderTriangleSurface );
 
-
 	//
 	// now blend in edges that cast silhouettes
 	//
 	RB_SimpleWorldSetup();
-	qglColor3f( 0.5, 0, 0 );
+	//qglColor3f( 0.5, 0, 0 );
+	qglColor3f( 1, 0, 0 );
+	qglLineWidth(5.f);
 	GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE );
 
 	for ( vLight = backEnd.viewDef->viewLights ; vLight ; vLight = vLight->next ) {

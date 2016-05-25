@@ -32,6 +32,8 @@ If you have questions concerning this license or the applicable additional terms
 #include "Game_local.h"
 #include "Player.h"
 
+#include "../renderer/tr_local.h"
+
 #ifdef GAME_DLL
 
 idSys *						sys = NULL;
@@ -70,8 +72,7 @@ idGameLocal::idGameLocal()
 {
 }
 
-void idGameLocal::Init( void )
-{
+void idGameLocal::Init( void ) {
 	idLib::Init();
 
 	// register static cvars declared in the game
@@ -91,29 +92,27 @@ void idGameLocal::Init( void )
 
 	player = new Player;
 	player->CalculateRenderView();
-}
-
-void idGameLocal::Shutdown( void )
-{
 
 }
 
-void idGameLocal::SetLocalClient( int clientNum )
-{
+void idGameLocal::Shutdown( void ) {
 
 }
 
-void idGameLocal::ThrottleUserInfo( void )
-{
+void idGameLocal::SetLocalClient( int clientNum ) {
 
 }
 
-const idDict * idGameLocal::SetUserInfo( int clientNum, const idDict &userInfo, bool isClient, bool canModify )
+void idGameLocal::ThrottleUserInfo( void ) {
+
+}
+
+const idDict* idGameLocal::SetUserInfo( int clientNum, const idDict &userInfo, bool isClient, bool canModify )
 {
 	return NULL;
 }
 
-const idDict * idGameLocal::GetUserInfo( int clientNum )
+const idDict* idGameLocal::GetUserInfo( int clientNum )
 {
 	return NULL;
 }
@@ -350,7 +349,7 @@ void idGameLocal::SpawnPlayer( int clientNum )
 
 gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds )
 {
-	gameRenderWorld->DebugClearLines(  1 );
+	gameRenderWorld->DebugClearLines( 1 );
 	gameReturn_t ret;
 	memset(&ret, 0, sizeof(gameReturn_t));
 

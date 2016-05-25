@@ -2795,7 +2795,6 @@ void idCommonLocal::Init( int argc, const char **argv, const char *cmdline ) {
 #ifdef ID_WRITE_VERSION
 		config_compressor = idCompressor::AllocArithmetic();
 #endif
-
 		// game specific initialization
 		InitGame();
 

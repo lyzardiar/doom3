@@ -675,6 +675,7 @@ typedef enum {
 	BE_NV20,
 	BE_R200,
 	BE_ARB2,
+	BE_NEW,
 	BE_BAD
 } backEndName_t;
 
@@ -1310,6 +1311,11 @@ void	R_ARB2_Init( void );
 void	RB_ARB2_DrawInteractions( void );
 void	R_ReloadARBPrograms_f( const idCmdArgs &args );
 int		R_FindARBProgram( GLenum target, const char *program );
+
+void    R_GLSL_Init( void );
+void    RB_GLSL_DrawInteractions( void );
+void	R_ReloadGLSLPrograms_f( const idCmdArgs &args );
+int		R_FindGLSLProgram( GLenum target, const char *program );
 
 typedef enum {
 	PROG_INVALID,

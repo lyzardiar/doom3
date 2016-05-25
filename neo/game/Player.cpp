@@ -1,7 +1,7 @@
 #include "../idlib/precompiled.h"
 #include "Player.h"
 
-idCVar Player::player_speed( "player_speed", "0.1", CVAR_GAME | CVAR_FLOAT, "player speed" );
+idCVar Player::player_speed( "player_speed", "0.1", CVAR_GAME | CVAR_FLOAT | CVAR_ARCHIVE, "player speed" );
 
 Player::Player():_renderView(NULL), orgin(90, 64, 200)
 {
@@ -63,6 +63,7 @@ void Player::Think()
 
 	orgin.x += _usercmd.rightmove * speed.y;
 	orgin.y += -_usercmd.rightmove * speed.x;
+	orgin.z += _usercmd.upmove * player_speed.GetFloat();
 
 	for (int i = 0; i < 3; i++ ) {
 		cmdAngles[i] = SHORT2ANGLE( _usercmd.angles[i] );

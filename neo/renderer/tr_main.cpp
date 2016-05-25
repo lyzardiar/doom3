@@ -946,6 +946,7 @@ void R_SetupProjection( void ) {
 	// this is the far-plane-at-infinity formulation, and
 	// crunches the Z range slightly so w=0 vertexes do not
 	// rasterize right at the wraparound point
+	// (z * 0.999+2.0*zNear) / z
 	tr.viewDef->projectionMatrix[2] = 0;
 	tr.viewDef->projectionMatrix[6] = 0;
 	tr.viewDef->projectionMatrix[10] = -0.999f;

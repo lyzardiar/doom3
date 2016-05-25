@@ -565,7 +565,9 @@ void idRenderSystemLocal::SetBackEndRenderer() {
 	// fallback
 	if ( backEndRenderer == BE_BAD ) {
 		// choose the best
-		if ( glConfig.allowARB2Path ) {
+		if (glConfig.allowNEWPath) {
+			backEndRenderer = BE_NEW;
+		} else if ( glConfig.allowARB2Path ) {
 			backEndRenderer = BE_ARB2;
 		} else if ( glConfig.allowR200Path ) {
 			backEndRenderer = BE_R200;
@@ -599,6 +601,11 @@ void idRenderSystemLocal::SetBackEndRenderer() {
 		break;
 	case BE_ARB2:
 		common->Printf( "using ARB2 renderSystem\n" );
+		backEndRendererHasVertexPrograms = true;
+		backEndRendererMaxLight = 999;
+		break;
+	case BE_NEW:
+		common->Printf( "using NEW renderSystem\n" );
 		backEndRendererHasVertexPrograms = true;
 		backEndRendererMaxLight = 999;
 		break;

@@ -94,6 +94,7 @@ typedef struct glconfig_s {
 	bool				allowNV10Path;
 	bool				allowR200Path;
 	bool				allowARB2Path;
+	bool                allowNEWPath;
 
 	bool				isInitialized;
 } glconfig_t;

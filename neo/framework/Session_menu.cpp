@@ -32,7 +32,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "Session_local.h"
 
 idCVar	idSessionLocal::gui_configServerRate( "gui_configServerRate", "0", CVAR_GUI | CVAR_ARCHIVE | CVAR_ROM | CVAR_INTEGER, "" );
-idCVar  idSessionLocal::test_map( "test_map", "0", CVAR_SYSTEM, "testmaps/test_box" );
+idCVar  idSessionLocal::test_map( "test_map", "0", CVAR_SYSTEM | CVAR_ARCHIVE, "testmaps/test_box" );
 // implements the setup for, and commands from, the main menu
 
 /*

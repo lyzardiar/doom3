@@ -2311,9 +2311,10 @@ void idSessionLocal::UpdateScreen( bool outOfSequence ) {
 		Sys_GrabMouseCursor( false );
 	}
 
+
 	renderSystem->BeginFrame( renderSystem->GetScreenWidth(), renderSystem->GetScreenHeight() );
 
-	// draw everything
+	//// draw everything
 	Draw();
 
 	if ( com_speeds.GetBool() ) {

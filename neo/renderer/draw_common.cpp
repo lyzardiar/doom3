@@ -349,6 +349,7 @@ RB_T_FillDepthBuffer
 ==================
 */
 void RB_T_FillDepthBuffer( const drawSurf_t *surf ) {
+
 	int			stage;
 	const idMaterial	*shader;
 	const shaderStage_t *pStage;
@@ -358,7 +359,6 @@ void RB_T_FillDepthBuffer( const drawSurf_t *surf ) {
 
 	tri = surf->geo;
 	shader = surf->material;
-
 	// update the clip plane if needed
 	if ( backEnd.viewDef->numClipPlanes && surf->space != backEnd.currentSpace ) {
 		GL_SelectTexture( 1 );
@@ -549,7 +549,6 @@ void RB_STD_FillDepthBuffer( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 	// from the ambient pass and the light passes.
 	qglEnable( GL_STENCIL_TEST );
 	qglStencilFunc( GL_ALWAYS, 1, 255 );
-
 	RB_RenderDrawSurfListWithFunction( drawSurfs, numDrawSurfs, RB_T_FillDepthBuffer );
 
 	if ( backEnd.viewDef->numClipPlanes ) {
@@ -928,6 +927,7 @@ void RB_STD_T_RenderShaderPasses( const drawSurf_t *surf ) {
 			}
 		}
 
+
 		// bind the texture
 		RB_BindVariableStageImage( &pStage->texture, regs );
 
@@ -1000,6 +1000,7 @@ int RB_STD_DrawShaderPasses( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 
 	GL_SelectTexture( 0 );
 	qglEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
 
 	RB_SetProgramEnvironment();
 
@@ -1665,6 +1666,7 @@ RB_STD_DrawView
 =============
 */
 void	RB_STD_DrawView( void ) {
+
 	drawSurf_t	 **drawSurfs;
 	int			numDrawSurfs;
 
@@ -1702,6 +1704,9 @@ void	RB_STD_DrawView( void ) {
 	case BE_R200:
 		RB_R200_DrawInteractions();
 		break;
+	case BE_NEW:
+		RB_GLSL_DrawInteractions();
+		break;
 	}
 
 	// disable stencil shadow test
@@ -1721,6 +1726,7 @@ void	RB_STD_DrawView( void ) {
 		RB_STD_DrawShaderPasses( drawSurfs+processed, numDrawSurfs-processed );
 	}
 
-	RB_RenderDebugTools( drawSurfs, numDrawSurfs );
 
+	RB_RenderDebugTools( drawSurfs, numDrawSurfs );
 }
+
