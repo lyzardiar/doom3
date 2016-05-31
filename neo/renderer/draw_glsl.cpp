@@ -58,8 +58,20 @@ static GLuint diffuseMatrixT;
 static GLuint specularMatrixS;
 static GLuint specularMatrixT;
 
+static GLuint diffuseColor;
+static GLuint specularColor;
+
+static GLuint colorModulate;
+static GLuint colorAdd;
+
 static GLuint wvp;
-static GLuint texture1;
+static GLuint normalCubeMapImage;
+static GLuint bumpImage;
+static GLuint lightFalloffImage;
+static GLuint lightImage;
+static GLuint diffuseImage;
+static GLuint specularImage;
+static GLuint specularTableImage;
 
 /*
 ==================
@@ -69,100 +81,67 @@ RB_ARB2_DrawInteraction
 void	RB_GLSL_DrawInteraction( const drawInteraction_t *din ) {
 	// load all the vertex program parameters
 
-	//glUniform4fv(viewOrgin, 1, din->localViewOrigin.ToFloatPtr());
-	//glUniform4fv(lightProjS, 1, din->lightProjection[0].ToFloatPtr());
-	//glUniform4fv(lightProjT, 1, din->lightProjection[1].ToFloatPtr());
-	//glUniform4fv(lightProjQ, 1, din->lightProjection[2].ToFloatPtr());
-	//glUniform4fv(lightFallOffS, 1, din->lightProjection[3].ToFloatPtr());
+	glUniform4fv(viewOrgin, 1, din->localViewOrigin.ToFloatPtr());
+	glUniform4fv(lightProjS, 1, din->lightProjection[0].ToFloatPtr());
+	glUniform4fv(lightProjT, 1, din->lightProjection[1].ToFloatPtr());
+	glUniform4fv(lightProjQ, 1, din->lightProjection[2].ToFloatPtr());
+	glUniform4fv(lightFallOffS, 1, din->lightProjection[3].ToFloatPtr());
+	glUniform4fv(bumpMatrixS, 1, din->bumpMatrix[0].ToFloatPtr());
+	glUniform4fv(bumpMatrixT, 1, din->bumpMatrix[1].ToFloatPtr());
+	glUniform4fv(diffuseMatrixS, 1, din->diffuseMatrix[0].ToFloatPtr());
+	glUniform4fv(diffuseMatrixT, 1, din->diffuseMatrix[1].ToFloatPtr());
+	glUniform4fv(specularMatrixS, 1, din->specularMatrix[0].ToFloatPtr());
+	glUniform4fv(specularMatrixT, 1, din->specularMatrix[1].ToFloatPtr());
 
+	static const float zero[4] = { 0, 0, 0, 0 };
+	static const float one[4] = { 1, 1, 1, 1 };
+	static const float negOne[4] = { -1, -1, -1, -1 };
+
+	switch ( din->vertexColor ) {
+	case SVC_IGNORE:
+		glUniform4fv(colorModulate, 1, zero);
+		glUniform4fv(colorAdd, 1, one);
+		break;
+	case SVC_MODULATE:
+		glUniform4fv(colorModulate, 1, one);
+		glUniform4fv(colorAdd, 1, zero);
+		break;
+	case SVC_INVERSE_MODULATE:
+		glUniform4fv(colorModulate, 1, negOne);
+		glUniform4fv(colorAdd, 1, one);
+		break;
+	}
+
+	glUniform4fv(diffuseColor, 1, din->diffuseColor.ToFloatPtr());
+	glUniform4fv(specularColor, 1, din->specularColor.ToFloatPtr());
 
 	// texture 1 will be the per-surface bump map
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	backEnd.glState.currenttmu = 1;
 	din->bumpImage->Bind();
 
 	// texture 2 will be the light falloff texture
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE2);
+	backEnd.glState.currenttmu = 2;
 	din->lightFalloffImage->Bind();
 
 	// texture 3 will be the light projection texture
-	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE3);
+	backEnd.glState.currenttmu = 3;
 	din->lightImage->Bind();
 
 	// texture 4 is the per-surface diffuse map
-	glActiveTexture(GL_TEXTURE3);
+	glActiveTexture(GL_TEXTURE4);
+	backEnd.glState.currenttmu = 4;
 	din->diffuseImage->Bind();
 
 	// texture 5 is the per-surface specular map
-	glActiveTexture(GL_TEXTURE4);
+	glActiveTexture(GL_TEXTURE5);
+	backEnd.glState.currenttmu = 5;
 	din->specularImage->Bind();
 
 	// draw it
 	RB_DrawElementsWithCounters( din->surf->geo );
-}
-
-void R_Draw3DCoordinate()
-{
-	//glUseProgram(program);
-	//GL_Cull(CT_TWO_SIDED);
-	//qglDisableClientState(GL_VERTEX_ARRAY);
-	//qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	//qglBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	//qglBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
-	float modelMatrix[16];
-	// -z
-	// -x
-	// y
-
-	// xÊÇ-yÖá yÊÇ-zÖá zÊÇ-xÖá
-	// z = -y y=-x z=-x
-	//	0, 0, -1, 0,
-	//	-1, 0, 0, 0,
-	//	0, 1, 0, 0,
-	//	0, 0, 0, 1
-	memset(modelMatrix, 0, 4*16);
-	modelMatrix[2] = modelMatrix[4] = -1;
-	modelMatrix[9] = modelMatrix[15] = 1;
-	myGlMultMatrix( backEnd.viewDef->worldSpace.modelViewMatrix, backEnd.viewDef->projectionMatrix, modelMatrix);
-	//memcpy(modelMatrix, backEnd.viewDef->worldSpace.modelViewMatrix, 16*4);
-	glUniformMatrix4fv(wvp, 1, GL_FALSE, &modelMatrix[0] );
-
-	// enable the vertex arrays
-	glEnableVertexAttribArray( 1 );
-	glEnableVertexAttribArray( 2 );
-
-	float vertices[] = {128.f, -128.f, -128.f,
-		128.f, -128.f, 128.f,
-		128.f, 128.f, 1.0f,
-		1.0f, 0.f, 0.f
-	};
-
-	float texcoord[] = {-1.f, -1.f, 1.f,
-		-1.f, 1.f, 0.f,
-	};
-
-	float color[] = {1.f, 0.f, 0.f, 0.f,
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-	};
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
-
-	//unsigned short indices[] = {0, 1, 0, 2, 0, 3};
-	//glDrawElements(GL_LINES, 4, GL_UNSIGNED_SHORT, indices);
-	unsigned short indices[] = {0, 1, 2, 2, 0, 3};
-	qglDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, indices);
-	GL_CheckErrors();
-
-	glDisableVertexAttribArray( 1 );
-	glDisableVertexAttribArray( 2 );
-
-	glUseProgram(0);
-
-	qglEnableClientState(GL_VERTEX_ARRAY);
-	qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
 }
 
 /*
@@ -177,7 +156,7 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	}
 
 	// perform setup here that will be constant for all interactions
-	//GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHMASK | backEnd.depthFunc );
+	GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHMASK | backEnd.depthFunc );
 	//GL_Cull(CT_TWO_SIDED);
 	qglDisableClientState(GL_VERTEX_ARRAY);
 	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -188,7 +167,6 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 
 	qglStencilFunc( GL_ALWAYS, 128, 255 );
 	float	modelMatrix[16];
-	float   tmp[16];
 	
 	myGlMultMatrix( backEnd.viewDef->worldSpace.modelViewMatrix, backEnd.viewDef->projectionMatrix, modelMatrix);
 	glUniformMatrix4fv(wvp, 1, GL_FALSE, &modelMatrix[0] );
@@ -196,11 +174,14 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	// enable the vertex arrays
 	glEnableVertexAttribArray( 1 );
 	glEnableVertexAttribArray( 2 );
+	glEnableVertexAttribArray( 3 );
+	glEnableVertexAttribArray( 4 );
+	glEnableVertexAttribArray( 5 );
+	glEnableVertexAttribArray( 6 );
 
-//	glActiveTexture(GL_TEXTURE1);
-
-	//	glBindTexture( GL_TEXTURE_2D, material->bumpMap->GetName() );
 	// texture 0 is the normalization cube map for the vector towards the light
+	glActiveTexture(GL_TEXTURE0);
+	backEnd.glState.currenttmu = 0;
 	if ( backEnd.vLight->lightShader->IsAmbientLight() ) {
 		globalImages->ambientNormalMap->Bind();
 	} else {
@@ -208,6 +189,8 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	}
 
 	// texture 6 is the specular lookup table
+	glActiveTexture(GL_TEXTURE6);
+	backEnd.glState.currenttmu = 6;
 	if ( r_testARBProgram.GetBool() ) {
 		globalImages->specular2DTableImage->Bind();	// variable specularity in alpha channel
 	} else {
@@ -215,28 +198,15 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	}
 
 	for ( ; surf ; surf=surf->nextOnLight ) {
-		// perform setup here that will not change over multiple interaction passes
-		backEnd.glState.currenttmu = 3;
-		glUniform1i( texture1,  3);
-
-		const idMaterial	*surfaceShader = surf->material;
-		const float			*surfaceRegs = surf->shaderRegisters;
-
-		for ( int surfaceStageNum = 0 ; surfaceStageNum < surfaceShader->GetNumStages() ; surfaceStageNum++ ) {
-			const shaderStage_t	*surfaceStage = surfaceShader->GetStage( surfaceStageNum );
-
-			surfaceStage->texture.image->Bind();
-
-		}
-		//R_Draw3DCoordinate();
-
 		// set the vertex pointers
 		idDrawVert	*ac = (idDrawVert *)vertexCache.Position( surf->geo->ambientCache );
-		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->xyz.ToFloatPtr());
-		//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->color);
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->xyz.ToFloatPtr());
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->st.ToFloatPtr());
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->color);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->normal.ToFloatPtr());
+		glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[0].ToFloatPtr());
+		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[1].ToFloatPtr());
 
 		//glDrawElements(GL_TRIANGLES, surf->geo->numIndexes, GL_UNSIGNED_SHORT, surf->geo->indexes);
 		// this may cause RB_ARB2_DrawInteraction to be exacuted multiple
@@ -246,8 +216,13 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 
 	glDisableVertexAttribArray( 1 );
 	glDisableVertexAttribArray( 2 );
+	glDisableVertexAttribArray( 3 );
+	glDisableVertexAttribArray( 4 );
+	glDisableVertexAttribArray( 5 );
+	glDisableVertexAttribArray( 6 );
 	glUseProgram(0);
 
+	backEnd.glState.currenttmu = -1;
 	GL_SelectTexture(0 );
 
 }
@@ -268,9 +243,47 @@ void R_GLSL_Init( void )
 	program = glCreateProgram();
 	glBindAttribLocation(program, 1, "vPosition");
 	glBindAttribLocation(program, 2, "vTexCoord");
+	glBindAttribLocation(program, 3, "vColor");
+	glBindAttribLocation(program, 4, "vNormal");
+	glBindAttribLocation(program, 5, "vTangent");
+	glBindAttribLocation(program, 6, "vBinormal");
 	GL_LinkProgram(program, vert, frag);
+
 	wvp = glGetUniformLocation(program, "WVP");
-	texture1 = glGetUniformLocation(program, "texture1");
+	viewOrgin = glGetUniformLocation(program, "fvLightPosition");
+	lightProjS = glGetUniformLocation(program, "lightProjectionS");
+	lightProjT = glGetUniformLocation(program, "lightProjectionT");
+	lightProjQ = glGetUniformLocation(program, "lightProjectionQ");
+	lightFallOffS = glGetUniformLocation(program, "lightFallOff");
+	bumpMatrixS = glGetUniformLocation(program, "bumpMatrixS");
+	bumpMatrixT = glGetUniformLocation(program, "bumpMatrixT");
+	diffuseMatrixS = glGetUniformLocation(program, "diffuseMatrixS");
+	diffuseMatrixT = glGetUniformLocation(program, "diffuseMatrixT");
+	specularMatrixS = glGetUniformLocation(program, "specularMatrixS");
+	specularMatrixT = glGetUniformLocation(program, "specularMatrixT");
+
+	normalCubeMapImage = glGetUniformLocation(program, "normalCubeMapImage");
+	bumpImage = glGetUniformLocation(program, "bumpImage");
+	lightFalloffImage = glGetUniformLocation(program, "lightFalloffImage");
+	lightImage = glGetUniformLocation(program, "lightImage");
+	diffuseImage = glGetUniformLocation(program, "diffuseImage");
+	specularImage = glGetUniformLocation(program, "specularImage");
+	specularTableImage = glGetUniformLocation(program, "specularTableImage");
+	diffuseColor = glGetUniformLocation(program, "diffuseColor");
+	specularColor = glGetUniformLocation(program, "specularColor");
+
+	colorModulate = glGetUniformLocation(program, "colorModulate");
+	colorAdd = glGetUniformLocation(program, "colorAdd");
+
+	glUseProgram(program);
+	glUniform1i(normalCubeMapImage, 0);
+	glUniform1i(bumpImage, 1);
+	glUniform1i(lightFalloffImage, 2);
+	glUniform1i(lightImage, 3);
+	glUniform1i(diffuseImage, 4);
+	glUniform1i(specularImage, 5);
+	glUniform1i(specularTableImage, 6);
+	glUseProgram(0);
 }
 
 void RB_GLSL_DrawInteractions( void )
@@ -278,7 +291,6 @@ void RB_GLSL_DrawInteractions( void )
 	viewLight_t		*vLight;
 	const idMaterial	*lightShader;
 	//qglColor4f(1.0, 0, 0, 1.0);
-	GL_SelectTexture( 0 );
 
 	qglDisableClientState(GL_VERTEX_ARRAY);
 	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -638,7 +638,6 @@ void RB_SetProgramEnvironment( void ) {
 	parm[3] = 1.0;
 	qglProgramEnvParameter4fvARB( GL_VERTEX_PROGRAM_ARB, 1, parm );
 
-
 }
 
 /*
