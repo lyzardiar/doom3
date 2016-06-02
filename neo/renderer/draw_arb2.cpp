@@ -184,7 +184,6 @@ void RB_ARB2_CreateDrawInteractions( const drawSurf_t *surf ) {
 		globalImages->specularTableImage->Bind();
 	}
 
-
 	for ( ; surf ; surf=surf->nextOnLight ) {
 		// perform setup here that will not change over multiple interaction passes
 

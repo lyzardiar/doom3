@@ -157,15 +157,13 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 
 	// perform setup here that will be constant for all interactions
 	GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHMASK | backEnd.depthFunc );
+
 	//GL_Cull(CT_TWO_SIDED);
 	qglDisableClientState(GL_VERTEX_ARRAY);
 	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	qglBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	qglBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 
 	glUseProgram(program);
 
-	qglStencilFunc( GL_ALWAYS, 128, 255 );
 	float	modelMatrix[16];
 	
 	myGlMultMatrix( backEnd.viewDef->worldSpace.modelViewMatrix, backEnd.viewDef->projectionMatrix, modelMatrix);
@@ -203,7 +201,7 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->xyz.ToFloatPtr());
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->st.ToFloatPtr());
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->color);
+		glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(idDrawVert), ac->color);
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->normal.ToFloatPtr());
 		glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[0].ToFloatPtr());
 		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[1].ToFloatPtr());
@@ -220,6 +218,35 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	glDisableVertexAttribArray( 4 );
 	glDisableVertexAttribArray( 5 );
 	glDisableVertexAttribArray( 6 );
+
+	// disable features
+	glActiveTexture( GL_TEXTURE6 );
+	backEnd.glState.currenttmu = 6;
+	globalImages->BindNull();
+
+	glActiveTexture( GL_TEXTURE5 );
+	backEnd.glState.currenttmu = 5;
+	globalImages->BindNull();
+
+	glActiveTexture( GL_TEXTURE4 );
+	backEnd.glState.currenttmu = 4;
+	globalImages->BindNull();
+
+	glActiveTexture( GL_TEXTURE3 );
+	backEnd.glState.currenttmu = 3;
+	globalImages->BindNull();
+
+	glActiveTexture( GL_TEXTURE2 );
+	backEnd.glState.currenttmu = 2;
+	globalImages->BindNull();
+
+	glActiveTexture( GL_TEXTURE1 );
+	backEnd.glState.currenttmu = 1;
+	globalImages->BindNull();
+
+	backEnd.glState.currenttmu = -1;
+	GL_SelectTexture( 0 );
+
 	glUseProgram(0);
 
 	backEnd.glState.currenttmu = -1;
@@ -294,8 +321,7 @@ void RB_GLSL_DrawInteractions( void )
 
 	qglDisableClientState(GL_VERTEX_ARRAY);
 	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	qglBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	qglBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
+
 	//
 	// for each light, perform adding and shadowing  
 	// RB_GLSL_DrawInteractions 不是每帧都会绘制
