@@ -315,9 +315,15 @@ void idGameLocal::InitFromNewMap( const char *mapName, idRenderWorld *renderWorl
 		}
 		else
 		{
+			//const idDeclEntityDef* def = FindEntityDef(classname);
+			//if (def == NULL)
 			renderEntity_t* renderEntity = new renderEntity_t;
 			ParseSpawnArgsToRenderEntity(&spawnArgs, renderEntity);
+			if (renderEntity->hModel == NULL)
+				continue;
+
 			gameRenderWorld->AddEntityDef(renderEntity);
+
 		}
 	}
 }
@@ -376,7 +382,8 @@ bool idGameLocal::Draw( int clientNum )
 
 escReply_t idGameLocal::HandleESC( idUserInterface **gui )
 {
-	return ESC_IGNORE;
+	common->Quit();
+	return ESC_GUI;
 }
 
 idUserInterface	* idGameLocal::StartMenu( void )
@@ -490,6 +497,18 @@ void idGameLocal::GetBestGameType( const char* map, const char* gametype, char b
 void idGameLocal::GetMapLoadingGUI( char gui[ MAX_STRING_CHARS ] )
 {
 
+}
+
+const idDeclEntityDef * idGameLocal::FindEntityDef( const char *name, bool makeDefault /*= true */ ) const
+{
+	const idDecl *decl = NULL;
+	if ( isMultiplayer ) {
+		decl = declManager->FindType( DECL_ENTITYDEF, va( "%s_mp", name ), false );
+	}
+	if ( !decl ) {
+		decl = declManager->FindType( DECL_ENTITYDEF, name, makeDefault );
+	}
+	return static_cast<const idDeclEntityDef *>( decl );
 }
 
 

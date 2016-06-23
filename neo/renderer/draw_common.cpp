@@ -1198,6 +1198,7 @@ void RB_StencilShadowPass( const drawSurf_t *drawSurfs ) {
 		}
 	} else {
 		// don't write to the color buffer, just the stencil buffer
+		// 不写深度 color alpha 深度小的时候才绘制
 		GL_State( GLS_DEPTHMASK | GLS_COLORMASK | GLS_ALPHAMASK | GLS_DEPTHFUNC_LESS );
 	}
 
@@ -1677,9 +1678,11 @@ void	RB_STD_DrawView( void ) {
 	numDrawSurfs = backEnd.viewDef->numDrawSurfs;
 
 	// clear the z buffer, set the projection matrix, etc
+	// 清理深度换成 设置投影矩阵等
 	RB_BeginDrawingView();
 
 	// decide how much overbrighting we are going to do
+	// 计算光照亮度
 	RB_DetermineLightScale();
 
 	// fill the depth buffer and clear color buffer to black except on

@@ -539,6 +539,7 @@ void RB_DetermineLightScale( void ) {
 	} else {
 		backEnd.lightScale = r_lightScale.GetFloat() * tr.backEndRendererMaxLight / max;
 		backEnd.overBright = max / tr.backEndRendererMaxLight;
+		// max > tr.backEndRendererMaxLight 才会调用 overBright<1.0
 	}
 }
 

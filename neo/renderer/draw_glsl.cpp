@@ -46,6 +46,7 @@ static const int MAX_BUFFER_LEN = 1024;
 
 
 static GLuint program;
+static GLuint lightOrgin;
 static GLuint viewOrgin;
 static GLuint lightProjS;
 static GLuint lightProjT;
@@ -81,7 +82,7 @@ RB_ARB2_DrawInteraction
 void	RB_GLSL_DrawInteraction( const drawInteraction_t *din ) {
 	// load all the vertex program parameters
 
-	glUniform4fv(viewOrgin, 1, din->localViewOrigin.ToFloatPtr());
+	glUniform3fv(viewOrgin, 1, din->localViewOrigin.ToFloatPtr());
 	glUniform4fv(lightProjS, 1, din->lightProjection[0].ToFloatPtr());
 	glUniform4fv(lightProjT, 1, din->lightProjection[1].ToFloatPtr());
 	glUniform4fv(lightProjQ, 1, din->lightProjection[2].ToFloatPtr());
@@ -140,7 +141,6 @@ void	RB_GLSL_DrawInteraction( const drawInteraction_t *din ) {
 	backEnd.glState.currenttmu = 5;
 	din->specularImage->Bind();
 
-	// draw it
 	RB_DrawElementsWithCounters( din->surf->geo );
 }
 
@@ -159,15 +159,20 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHMASK | backEnd.depthFunc );
 
 	//GL_Cull(CT_TWO_SIDED);
-	qglDisableClientState(GL_VERTEX_ARRAY);
+	qglEnableClientState(GL_VERTEX_ARRAY);
+	//qglDisableClientState(GL_VERTEX_ARRAY);
 	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	glUseProgram(program);
 
 	float	modelMatrix[16];
 	
-	myGlMultMatrix( backEnd.viewDef->worldSpace.modelViewMatrix, backEnd.viewDef->projectionMatrix, modelMatrix);
+	myGlMultMatrix( surf->space->modelViewMatrix, backEnd.viewDef->projectionMatrix, modelMatrix);
 	glUniformMatrix4fv(wvp, 1, GL_FALSE, &modelMatrix[0] );
+	//glUniformMatrix4fv(wvp1, 1, GL_FALSE, &surf->space->modelViewMatrix[0] );
+	//const float* mat = backEnd.viewDef->projectionMatrix; 
+	//glUniformMatrix4fv(wvp, 1, GL_FALSE, &mat[0] );
+
 
 	// enable the vertex arrays
 	glEnableVertexAttribArray( 1 );
@@ -199,6 +204,7 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 		// set the vertex pointers
 		idDrawVert	*ac = (idDrawVert *)vertexCache.Position( surf->geo->ambientCache );
 
+		qglVertexPointer( 3, GL_FLOAT, sizeof( idDrawVert ), ac->xyz.ToFloatPtr() );
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->xyz.ToFloatPtr());
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->st.ToFloatPtr());
 		glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(idDrawVert), ac->color);
@@ -206,6 +212,11 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 		glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[0].ToFloatPtr());
 		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(idDrawVert), ac->tangents[1].ToFloatPtr());
 
+		idVec4 localLight;
+
+		R_GlobalPointToLocal( surf->space->modelMatrix, backEnd.vLight->globalLightOrigin, localLight.ToVec3() );
+		localLight.w = 0.0f;
+		glUniform3fv(lightOrgin, 1, localLight.ToFloatPtr());
 		//glDrawElements(GL_TRIANGLES, surf->geo->numIndexes, GL_UNSIGNED_SHORT, surf->geo->indexes);
 		// this may cause RB_ARB2_DrawInteraction to be exacuted multiple
 		// times with different colors and images if the surface or light have multiple layers
@@ -244,9 +255,6 @@ void RB_GLSL_CreateDrawInteractions( const drawSurf_t *surf ) {
 	backEnd.glState.currenttmu = 1;
 	globalImages->BindNull();
 
-	backEnd.glState.currenttmu = -1;
-	GL_SelectTexture( 0 );
-
 	glUseProgram(0);
 
 	backEnd.glState.currenttmu = -1;
@@ -277,7 +285,8 @@ void R_GLSL_Init( void )
 	GL_LinkProgram(program, vert, frag);
 
 	wvp = glGetUniformLocation(program, "WVP");
-	viewOrgin = glGetUniformLocation(program, "fvLightPosition");
+	lightOrgin = glGetUniformLocation(program, "fvLightPosition");
+	viewOrgin = glGetUniformLocation(program, "fvEyePosition");
 	lightProjS = glGetUniformLocation(program, "lightProjectionS");
 	lightProjT = glGetUniformLocation(program, "lightProjectionT");
 	lightProjQ = glGetUniformLocation(program, "lightProjectionQ");
@@ -317,10 +326,7 @@ void RB_GLSL_DrawInteractions( void )
 {
 	viewLight_t		*vLight;
 	const idMaterial	*lightShader;
-	//qglColor4f(1.0, 0, 0, 1.0);
 
-	qglDisableClientState(GL_VERTEX_ARRAY);
-	qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	//
 	// for each light, perform adding and shadowing  
@@ -361,10 +367,32 @@ void RB_GLSL_DrawInteractions( void )
 			qglStencilFunc( GL_ALWAYS, 128, 255 );
 		}
 
+		qglEnable( GL_VERTEX_PROGRAM_ARB );
+		// stencil shadow shader
+		qglBindProgramARB( GL_VERTEX_PROGRAM_ARB, VPROG_STENCIL_SHADOW );
 		RB_StencilShadowPass( vLight->globalShadows );
+		// interaction shader
+		qglDisableClientState(GL_VERTEX_ARRAY);
+		qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		RB_GLSL_CreateDrawInteractions( vLight->localInteractions );
+
+		qglEnableClientState(GL_VERTEX_ARRAY);
+		qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		qglEnable( GL_VERTEX_PROGRAM_ARB );
+		qglBindProgramARB( GL_VERTEX_PROGRAM_ARB, VPROG_STENCIL_SHADOW );
 		RB_StencilShadowPass( vLight->localShadows );
+
+		qglDisableClientState(GL_VERTEX_ARRAY);
+		qglDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		RB_GLSL_CreateDrawInteractions( vLight->globalInteractions );
+		qglEnableClientState(GL_VERTEX_ARRAY);
+		qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		qglDisable( GL_VERTEX_PROGRAM_ARB );
+
+		//RB_StencilShadowPass( vLight->globalShadows );
+		//RB_GLSL_CreateDrawInteractions( vLight->localInteractions );
+		//RB_StencilShadowPass( vLight->localShadows );
+		//RB_GLSL_CreateDrawInteractions( vLight->globalInteractions );
 
 		// translucent surfaces never get stencil shadowed
 		if ( r_skipTranslucent.GetBool() ) {

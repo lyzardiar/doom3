@@ -32,7 +32,7 @@ If you have questions concerning this license or the applicable additional terms
 /*
 ===============================================================================
 
-	Local implementation of the public game interface.
+Local implementation of the public game interface.
 
 ===============================================================================
 */
@@ -46,7 +46,7 @@ If you have questions concerning this license or the applicable additional terms
 
 // if set to 1 the server sends the client PVS with snapshots and the client compares against what it sees
 #ifndef ASYNC_WRITE_PVS
-	#define ASYNC_WRITE_PVS 0
+#define ASYNC_WRITE_PVS 0
 #endif
 
 #ifdef ID_DEBUG_UNINITIALIZED_MEMORY
@@ -160,7 +160,7 @@ public:
 		OUTOFORDER_SORT
 	} outOfOrderBehaviour_t;
 
-							idEventQueue() : start( NULL ), end( NULL ) {}
+	idEventQueue() : start( NULL ), end( NULL ) {}
 
 	entityNetEvent_t *		Alloc();
 	void					Free( entityNetEvent_t *event );
@@ -184,7 +184,7 @@ private:
 template< class type >
 class idEntityPtr {
 public:
-							idEntityPtr();
+	idEntityPtr();
 
 	// save games
 
@@ -237,7 +237,7 @@ public:
 	bool					inCinematic;			// game is playing cinematic (player controls frozen)
 	bool					skipCinematic;
 
-													// are kept up to date with changes to serverInfo
+	// are kept up to date with changes to serverInfo
 	int						framenum;
 	int						previousTime;			// time in msec of last frame
 	int						time;					// in msec
@@ -248,8 +248,8 @@ public:
 	bool					isMultiplayer;			// set if the game is run in multiplayer mode
 	bool					isServer;				// set if the game is run for a dedicated or listen server
 	bool					isClient;				// set if the game is run for a client
-													// discriminates between the RunFrame path and the ClientPrediction path
-													// NOTE: on a listen server, isClient is false
+	// discriminates between the RunFrame path and the ClientPrediction path
+	// NOTE: on a listen server, isClient is false
 	int						localClientNum;			// number of the local client. MP: -1 on a dedicated
 	idLinkList<idEntity>	snapshotEntities;		// entities from the last snapshot
 	int						realClientTime;			// real client time
@@ -264,7 +264,7 @@ public:
 
 	// ---------------------- Public idGame Interface -------------------
 
-							idGameLocal();
+	idGameLocal();
 
 	virtual void			Init( void );
 	virtual void			Shutdown( void );
@@ -312,10 +312,12 @@ public:
 
 	virtual void				GetBestGameType( const char* map, const char* gametype, char buf[ MAX_STRING_CHARS ] );
 
-		virtual void				GetMapLoadingGUI( char gui[ MAX_STRING_CHARS ] );
+	virtual void				GetMapLoadingGUI( char gui[ MAX_STRING_CHARS ] );
+
+	const idDeclEntityDef *	FindEntityDef( const char *name, bool makeDefault = true ) const;
 private:
 	idDict _playerInfo;
-	
+
 	Player* player;
 
 	idMapFile* mapFile;
