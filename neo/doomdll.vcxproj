@@ -254,6 +254,7 @@
     <ClInclude Include="renderer\jpeg-6\jversion.h" />
     <ClInclude Include="renderer\Material.h" />
     <ClInclude Include="renderer\MegaTexture.h" />
+    <ClInclude Include="renderer\MeshLoaderB3D.h" />
     <ClInclude Include="renderer\Model.h" />
     <ClInclude Include="renderer\ModelDecal.h" />
     <ClInclude Include="renderer\ModelManager.h" />
@@ -408,6 +409,7 @@
     <ClCompile Include="renderer\jpeg-6\jutils.c" />
     <ClCompile Include="renderer\Material.cpp" />
     <ClCompile Include="renderer\MegaTexture.cpp" />
+    <ClCompile Include="renderer\MeshLoaderB3D.cpp" />
     <ClCompile Include="renderer\Model.cpp" />
     <ClCompile Include="renderer\ModelDecal.cpp" />
     <ClCompile Include="renderer\ModelManager.cpp" />

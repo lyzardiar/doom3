@@ -37,6 +37,8 @@ If you have questions concerning this license or the applicable additional terms
 ===============================================================================
 */
 
+class MeshLoaderB3D;
+
 class idRenderModelStatic : public idRenderModel {
 public:
 	// the inherited public interface
@@ -95,6 +97,7 @@ public:
 	bool						ConvertASEToModelSurfaces( const struct aseModel_s *ase );
 	bool						ConvertLWOToModelSurfaces( const struct st_lwObject *lwo );
 	bool						ConvertMAToModelSurfaces (const struct maModel_s *ma );
+	bool                        ConvertB3DToModelSurfaces( const MeshLoaderB3D* b3d);
 
 	struct aseModel_s *			ConvertLWOToASE( const struct st_lwObject *obj, const char *fileName );
 
@@ -126,6 +129,8 @@ protected:
 	static idCVar				r_slopTexCoord;			// merge texture coordinates this far apart
 	static idCVar				r_slopNormal;			// merge normals that dot less than this
 };
+
+
 
 /*
 ===============================================================================

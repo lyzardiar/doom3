@@ -307,6 +307,9 @@ idRenderModel *idRenderModelManagerLocal::GetModel( const char *modelName, bool 
 	} else if ( extension.Icmp( "liquid" ) == 0  ) {
 		model = new idRenderModelLiquid;
 		model->InitFromFile( modelName );
+	} else if ( extension.Icmp( "b3d" ) == 0 ) {
+		model = new idRenderModelStatic;
+		model->InitFromFile( modelName );
 	} else {
 
 		if ( extension.Length() ) {

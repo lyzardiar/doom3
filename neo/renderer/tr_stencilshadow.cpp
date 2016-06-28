@@ -1253,6 +1253,11 @@ srfTriangles_t *R_CreateShadowVolume( const idRenderEntityLocal *ent,
 
 	R_CalcInteractionFacing( ent, tri, light, cullInfo );
 
+	if (tri->numIndexes > 10)
+	{
+		common->Printf("sss");
+	}
+	
 	int numFaces = tri->numIndexes / 3;
 	int allFront = 1;
 	for ( i = 0; i < numFaces && allFront; i++ ) {

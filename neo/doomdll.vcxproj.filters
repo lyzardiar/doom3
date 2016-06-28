@@ -375,6 +375,9 @@
     <ClInclude Include="renderer\glutils.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\MeshLoaderB3D.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sys\sys_local.cpp">
@@ -906,6 +909,9 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\glutils.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\MeshLoaderB3D.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

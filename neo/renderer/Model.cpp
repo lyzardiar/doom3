@@ -34,6 +34,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "Model_ase.h"
 #include "Model_lwo.h"
 #include "Model_ma.h"
+#include "MeshLoaderB3D.h"
 
 idCVar idRenderModelStatic::r_mergeModelSurfaces( "r_mergeModelSurfaces", "1", CVAR_BOOL|CVAR_RENDERER, "combine model surfaces with the same material" );
 idCVar idRenderModelStatic::r_slopVertex( "r_slopVertex", "0.01", CVAR_RENDERER, "merge xyz coordinates this far apart" );
@@ -296,6 +297,12 @@ void idRenderModelStatic::InitFromFile( const char *fileName ) {
 	} else if ( extension.Icmp( "ma" ) == 0 ) {
 		loaded		= LoadMA( name );
 		reloadable	= true;
+	} else if ( extension.Icmp( "b3d") == 0){
+		MeshLoaderB3D* b3d = new MeshLoaderB3D;
+		loaded      = b3d->Load(fileName);
+		ConvertB3DToModelSurfaces(b3d);
+		delete b3d;
+		reloadable = true;
 	} else {
 		common->Warning( "idRenderModelStatic::InitFromFile: unknown type for model: \'%s\'", name.c_str() );
 		loaded		= false;
@@ -1868,6 +1875,19 @@ bool idRenderModelStatic::ConvertMAToModelSurfaces (const struct maModel_s *ma )
 			R_FreeStaticTriSurf( mergeTri );
 		}
 	}
+
+	return true;
+}
+
+bool idRenderModelStatic::ConvertB3DToModelSurfaces( const MeshLoaderB3D* b3d )
+{
+	surfaces = b3d->_surfaces;
+
+	modelSurface_t* surf = &surfaces[0];
+	R_AllocStaticTriSurfIndexes(surf->geometry, b3d->_indices.Num());
+	surf->geometry->numIndexes = b3d->_indices.Num();
+	for (int i=0; i<b3d->_indices.Num(); ++i)
+		surf->geometry->indexes[i] = b3d->_indices[i];
 
 	return true;
 }
