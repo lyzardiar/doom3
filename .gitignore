@@ -54,5 +54,5 @@ Temporary Items
 *.pdb
 *.vcxproj.user
 
-build
-neo/base
+build/Debug/base
+

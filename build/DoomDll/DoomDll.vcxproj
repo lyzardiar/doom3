@@ -1,0 +1,600 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C4A34B8C-7CD1-443B-BDDC-B46CB8C1A169}</ProjectGuid>
+    <RootNamespace>DoomDll1</RootNamespace>
+    <ProjectName>DoomDll</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>__DOOM_DLL__;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxguid.lib;dinput8.lib;Iphlpapi.lib;Winmm.lib;Ws2_32.lib;glew32.lib;opengl32.lib;idlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../win32/debug;../../lib</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\cm\CollisionModel_contacts.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_contents.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_debug.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_files.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_load.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_rotate.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_trace.cpp" />
+    <ClCompile Include="..\..\src\cm\CollisionModel_translate.cpp" />
+    <ClCompile Include="..\..\src\framework\async\AsyncClient.cpp" />
+    <ClCompile Include="..\..\src\framework\async\AsyncNetwork.cpp" />
+    <ClCompile Include="..\..\src\framework\async\AsyncServer.cpp" />
+    <ClCompile Include="..\..\src\framework\async\MsgChannel.cpp" />
+    <ClCompile Include="..\..\src\framework\async\NetworkSystem.cpp" />
+    <ClCompile Include="..\..\src\framework\async\ServerScan.cpp" />
+    <ClCompile Include="..\..\src\framework\CmdSystem.cpp" />
+    <ClCompile Include="..\..\src\framework\Common.cpp" />
+    <ClCompile Include="..\..\src\framework\Compressor.cpp" />
+    <ClCompile Include="..\..\src\framework\Console.cpp" />
+    <ClCompile Include="..\..\src\framework\CVarSystem.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclAF.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclEntityDef.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclFX.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclManager.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclParticle.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclPDA.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclSkin.cpp" />
+    <ClCompile Include="..\..\src\framework\DeclTable.cpp" />
+    <ClCompile Include="..\..\src\framework\DemoFile.cpp" />
+    <ClCompile Include="..\..\src\framework\EditField.cpp" />
+    <ClCompile Include="..\..\src\framework\EventLoop.cpp" />
+    <ClCompile Include="..\..\src\framework\File.cpp" />
+    <ClCompile Include="..\..\src\framework\FileSystem.cpp" />
+    <ClCompile Include="..\..\src\framework\KeyInput.cpp" />
+    <ClCompile Include="..\..\src\framework\Session.cpp" />
+    <ClCompile Include="..\..\src\framework\Session_menu.cpp" />
+    <ClCompile Include="..\..\src\framework\Unzip.cpp" />
+    <ClCompile Include="..\..\src\framework\UsercmdGen.cpp" />
+    <ClCompile Include="..\..\src\renderer\Cinematic.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_arb.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_arb2.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_common.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_glsl.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_nv10.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_nv20.cpp" />
+    <ClCompile Include="..\..\src\renderer\draw_r200.cpp" />
+    <ClCompile Include="..\..\src\renderer\glutils.cpp" />
+    <ClCompile Include="..\..\src\renderer\GuiModel.cpp" />
+    <ClCompile Include="..\..\src\renderer\Image_files.cpp" />
+    <ClCompile Include="..\..\src\renderer\Image_init.cpp" />
+    <ClCompile Include="..\..\src\renderer\Image_load.cpp" />
+    <ClCompile Include="..\..\src\renderer\Image_process.cpp" />
+    <ClCompile Include="..\..\src\renderer\Image_program.cpp" />
+    <ClCompile Include="..\..\src\renderer\Interaction.cpp" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcapimin.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jccoefct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jccolor.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcdctmgr.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jchuff.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcinit.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcmainct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcmarker.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcmaster.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcomapi.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcparam.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcphuff.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcprepct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jcsample.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdapimin.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdapistd.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdatadst.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdatasrc.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdcoefct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdcolor.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jddctmgr.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdhuff.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdinput.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdmainct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdmarker.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdmaster.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdmerge.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdphuff.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdpostct.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdsample.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jdtrans.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jerror.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jfdctflt.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jfdctfst.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jfdctint.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jidctflt.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jidctfst.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jidctint.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jidctred.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jmemmgr.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jmemnobs.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jquant1.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jquant2.c" />
+    <ClCompile Include="..\..\src\renderer\jpeg-6\jutils.c" />
+    <ClCompile Include="..\..\src\renderer\Material.cpp" />
+    <ClCompile Include="..\..\src\renderer\MegaTexture.cpp" />
+    <ClCompile Include="..\..\src\renderer\MeshLoaderB3D.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model.cpp" />
+    <ClCompile Include="..\..\src\renderer\ModelDecal.cpp" />
+    <ClCompile Include="..\..\src\renderer\ModelManager.cpp" />
+    <ClCompile Include="..\..\src\renderer\ModelOverlay.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_ase.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_beam.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_liquid.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_lwo.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_ma.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_md3.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_md5.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_prt.cpp" />
+    <ClCompile Include="..\..\src\renderer\Model_sprite.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderEntity.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderSystem.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderSystem_init.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderWorld.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderWorld_demo.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderWorld_load.cpp" />
+    <ClCompile Include="..\..\src\renderer\RenderWorld_portals.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_backend.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_deform.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_font.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_guisurf.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_light.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_lightrun.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_main.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_orderIndexes.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_polytope.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_render.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_rendertools.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_shadowbounds.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_stencilshadow.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_subview.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_trace.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_trisurf.cpp" />
+    <ClCompile Include="..\..\src\renderer\tr_turboshadow.cpp" />
+    <ClCompile Include="..\..\src\renderer\VertexCache.cpp" />
+    <ClCompile Include="..\..\src\sys\sys_local.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\rc\CreateResourceIDs.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_cpu.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_glimp.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_input.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_main.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_net.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_qgl.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_shared.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_syscon.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_taskkeyhook.cpp" />
+    <ClCompile Include="..\..\src\sys\win32\win_wndproc.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\dmap.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\facebsp.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\gldraw.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\glfile.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\leakfile.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\map.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\optimize.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\optimize_gcc.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\output.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\portals.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\shadowopt3.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\tritjunction.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\tritools.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\ubrush.cpp" />
+    <ClCompile Include="..\..\src\tools\compilers\dmap\usurface.cpp" />
+    <ClCompile Include="..\..\src\ui\BindWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\ChoiceWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\DeviceContext.cpp" />
+    <ClCompile Include="..\..\src\ui\EditWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\FieldWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\GameBearShootWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\GameBustOutWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\GameSSDWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\GuiScript.cpp" />
+    <ClCompile Include="..\..\src\ui\ListGUI.cpp" />
+    <ClCompile Include="..\..\src\ui\ListWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\MarkerWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\RegExp.cpp" />
+    <ClCompile Include="..\..\src\ui\RenderWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\SimpleWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\SliderWindow.cpp" />
+    <ClCompile Include="..\..\src\ui\UserInterface.cpp" />
+    <ClCompile Include="..\..\src\ui\Window.cpp" />
+    <ClCompile Include="..\..\src\ui\Winvar.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\cm\CollisionModel.h" />
+    <ClInclude Include="..\..\src\cm\CollisionModel_local.h" />
+    <ClInclude Include="..\..\src\framework\async\AsyncClient.h" />
+    <ClInclude Include="..\..\src\framework\async\AsyncNetwork.h" />
+    <ClInclude Include="..\..\src\framework\async\AsyncServer.h" />
+    <ClInclude Include="..\..\src\framework\async\MsgChannel.h" />
+    <ClInclude Include="..\..\src\framework\async\NetworkSystem.h" />
+    <ClInclude Include="..\..\src\framework\async\ServerScan.h" />
+    <ClInclude Include="..\..\src\framework\BuildDefines.h" />
+    <ClInclude Include="..\..\src\framework\BuildVersion.h" />
+    <ClInclude Include="..\..\src\framework\CmdSystem.h" />
+    <ClInclude Include="..\..\src\framework\Common.h" />
+    <ClInclude Include="..\..\src\framework\Compressor.h" />
+    <ClInclude Include="..\..\src\framework\Console.h" />
+    <ClInclude Include="..\..\src\framework\CVarSystem.h" />
+    <ClInclude Include="..\..\src\framework\DeclAF.h" />
+    <ClInclude Include="..\..\src\framework\DeclEntityDef.h" />
+    <ClInclude Include="..\..\src\framework\DeclFX.h" />
+    <ClInclude Include="..\..\src\framework\DeclManager.h" />
+    <ClInclude Include="..\..\src\framework\DeclParticle.h" />
+    <ClInclude Include="..\..\src\framework\DeclPDA.h" />
+    <ClInclude Include="..\..\src\framework\DeclSkin.h" />
+    <ClInclude Include="..\..\src\framework\DeclTable.h" />
+    <ClInclude Include="..\..\src\framework\DemoChecksum.h" />
+    <ClInclude Include="..\..\src\framework\DemoFile.h" />
+    <ClInclude Include="..\..\src\framework\EditField.h" />
+    <ClInclude Include="..\..\src\framework\EventLoop.h" />
+    <ClInclude Include="..\..\src\framework\File.h" />
+    <ClInclude Include="..\..\src\framework\FileSystem.h" />
+    <ClInclude Include="..\..\src\framework\KeyInput.h" />
+    <ClInclude Include="..\..\src\framework\Licensee.h" />
+    <ClInclude Include="..\..\src\framework\Session.h" />
+    <ClInclude Include="..\..\src\framework\Session_local.h" />
+    <ClInclude Include="..\..\src\framework\Unzip.h" />
+    <ClInclude Include="..\..\src\framework\UsercmdGen.h" />
+    <ClInclude Include="..\..\src\renderer\Cinematic.h" />
+    <ClInclude Include="..\..\src\renderer\glext.h" />
+    <ClInclude Include="..\..\src\renderer\gl\glew.h" />
+    <ClInclude Include="..\..\src\renderer\GuiModel.h" />
+    <ClInclude Include="..\..\src\renderer\Image.h" />
+    <ClInclude Include="..\..\src\renderer\Interaction.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jchuff.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jconfig.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jdct.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jdhuff.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jerror.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jinclude.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jmemsys.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jmorecfg.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jpegint.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jpeglib.h" />
+    <ClInclude Include="..\..\src\renderer\jpeg-6\jversion.h" />
+    <ClInclude Include="..\..\src\renderer\Material.h" />
+    <ClInclude Include="..\..\src\renderer\MegaTexture.h" />
+    <ClInclude Include="..\..\src\renderer\MeshLoaderB3D.h" />
+    <ClInclude Include="..\..\src\renderer\Model.h" />
+    <ClInclude Include="..\..\src\renderer\ModelDecal.h" />
+    <ClInclude Include="..\..\src\renderer\ModelManager.h" />
+    <ClInclude Include="..\..\src\renderer\ModelOverlay.h" />
+    <ClInclude Include="..\..\src\renderer\Model_ase.h" />
+    <ClInclude Include="..\..\src\renderer\Model_local.h" />
+    <ClInclude Include="..\..\src\renderer\Model_lwo.h" />
+    <ClInclude Include="..\..\src\renderer\Model_ma.h" />
+    <ClInclude Include="..\..\src\renderer\Model_md3.h" />
+    <ClInclude Include="..\..\src\renderer\qgl.h" />
+    <ClInclude Include="..\..\src\renderer\qgl_linked.h" />
+    <ClInclude Include="..\..\src\renderer\RenderSystem.h" />
+    <ClInclude Include="..\..\src\renderer\RenderWorld.h" />
+    <ClInclude Include="..\..\src\renderer\RenderWorld_local.h" />
+    <ClInclude Include="..\..\src\renderer\simplex.h" />
+    <ClInclude Include="..\..\src\renderer\tr_local.h" />
+    <ClInclude Include="..\..\src\renderer\VertexCache.h" />
+    <ClInclude Include="..\..\src\renderer\wglext.h" />
+    <ClInclude Include="..\..\src\sys\sys_local.h" />
+    <ClInclude Include="..\..\src\sys\sys_public.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\AFEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\Common_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\CreateResourceIDs.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\Debugger_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\DeclEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\doom_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\GuiEd_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\MaterialEditor_Resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\ParticleEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\PDAEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\PropTree_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\Radiant_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\ScriptEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\rc\SoundEditor_resource.h" />
+    <ClInclude Include="..\..\src\sys\win32\win_local.h" />
+    <ClInclude Include="..\..\src\tools\compilers\dmap\dmap.h" />
+    <ClInclude Include="..\..\src\ui\BindWindow.h" />
+    <ClInclude Include="..\..\src\ui\ChoiceWindow.h" />
+    <ClInclude Include="..\..\src\ui\DeviceContext.h" />
+    <ClInclude Include="..\..\src\ui\EditWindow.h" />
+    <ClInclude Include="..\..\src\ui\FieldWindow.h" />
+    <ClInclude Include="..\..\src\ui\GameBearShootWindow.h" />
+    <ClInclude Include="..\..\src\ui\GameBustOutWindow.h" />
+    <ClInclude Include="..\..\src\ui\GameSSDWindow.h" />
+    <ClInclude Include="..\..\src\ui\GuiScript.h" />
+    <ClInclude Include="..\..\src\ui\ListGUI.h" />
+    <ClInclude Include="..\..\src\ui\ListGUILocal.h" />
+    <ClInclude Include="..\..\src\ui\ListWindow.h" />
+    <ClInclude Include="..\..\src\ui\MarkerWindow.h" />
+    <ClInclude Include="..\..\src\ui\Rectangle.h" />
+    <ClInclude Include="..\..\src\ui\RegExp.h" />
+    <ClInclude Include="..\..\src\ui\RenderWindow.h" />
+    <ClInclude Include="..\..\src\ui\SimpleWindow.h" />
+    <ClInclude Include="..\..\src\ui\SliderWindow.h" />
+    <ClInclude Include="..\..\src\ui\UserInterface.h" />
+    <ClInclude Include="..\..\src\ui\UserInterfaceLocal.h" />
+    <ClInclude Include="..\..\src\ui\Window.h" />
+    <ClInclude Include="..\..\src\ui\Winvar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\AFEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\Common.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\Debugger.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\DeclEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\doom.rc" />
+    <ResourceCompile Include="..\..\src\sys\win32\rc\GuiEd.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\MaterialEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\ParticleEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\PDAEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\PropTree.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\Radiant.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\ScriptEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\..\src\sys\win32\rc\SoundEditor.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\BEVEL.BMP" />
+    <None Include="..\..\src\sys\win32\rc\res\DEFTEX.WAL" />
+    <None Include="..\..\src\sys\win32\rc\res\fpoint.cur" />
+    <None Include="..\..\src\sys\win32\rc\res\GetString.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\src\sys\win32\rc\res\guied_hand.cur" />
+    <None Include="..\..\src\sys\win32\rc\res\PropTree.rc2" />
+    <None Include="..\..\src\sys\win32\rc\res\spliter.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\BITMAP2.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\BMP00001.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\bmp00002.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\bmp00003.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\bmp00004.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\bmp00005.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\BMP0002.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\cchsb.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\ccrgb.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_back.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_breakpoint.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_current.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_currentline.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_empty.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_open.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\dbg_toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\doom.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\ENDCAP.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\fxed_link.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\fxed_toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\fxeditor.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_collapse.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_expand.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_nav_visible.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_nav_visibledisabled.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_scripts.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_scripts_white.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\guied_viewer_toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\IBEVEL.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\icon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\IENDCAP.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\logo_sm3dfx.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\matedtree.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\MaterialEditor.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\me_disabled_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\me_enabled.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\me_off_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\me_on_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\MEFileToolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\MEtoolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\Q.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\qe3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\Radiant.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\RADIANT3.GIF" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\RadiantDoc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\shaderbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\shaderdoc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\shaderframe.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\Toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\TOOLBAR1.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\TOOLBAR2.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\VIEWDEFA.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\sys\win32\rc\res\VIEWOPPO.BMP" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
