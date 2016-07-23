@@ -52,6 +52,7 @@ Temporary Items
 *.sdf
 *.suo
 *.pdb
+*.db
 *.vcxproj.user
 
 build/Debug/base
